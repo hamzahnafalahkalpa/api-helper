@@ -1,7 +1,8 @@
 <?php
 
-namespace Zahzah\ApiHelper\Contracts;
+namespace Hanafalah\ApiHelper\Contracts;
 
-interface EncryptorInterface{
+interface EncryptorInterface
+{
     public function handle(): mixed;
 }

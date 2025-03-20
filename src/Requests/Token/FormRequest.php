@@ -1,6 +1,6 @@
 <?php
 
-namespace Zahzah\ApiHelper\Requests\Token;
+namespace Hanafalah\ApiHelper\Requests\Token;
 
 use Illuminate\Foundation\Http\FormRequest as BaseFormRequest;
 
@@ -11,15 +11,15 @@ class FormRequest extends BaseFormRequest
      */
     public function authorize(): bool
     {
-        
 
-        return 1==1;
+
+        return 1 == 1;
     }
 
     public function rules(): array
     {
         return [
-            'token' => ['nullable','string','max:255']
+            'token' => ['nullable', 'string', 'max:255']
         ];
     }
 }

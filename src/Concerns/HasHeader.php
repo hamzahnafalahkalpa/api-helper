@@ -1,13 +1,14 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
 /**
  * Concern for retrieving data from the HTTP request headers.
  */
-trait HasHeader{
-    protected static $__headers; 
-    
+trait HasHeader
+{
+    protected static $__headers;
+
     protected $__authorization;
 
     /**
@@ -15,7 +16,8 @@ trait HasHeader{
      *
      * @return self
      */
-    protected function setCollectHeader(): self{
+    protected function setCollectHeader(): self
+    {
         static::$__headers = request()->headers;
         return $this;
     }
@@ -27,7 +29,8 @@ trait HasHeader{
      *
      * @return string|null
      */
-    protected function getHeader(string $key): string|null{
+    protected function getHeader(string $key): string|null
+    {
         return static::$__headers->get($key);
     }
 
@@ -39,7 +42,8 @@ trait HasHeader{
      *
      * @return self
      */
-    protected function setHeader(string $key, string $value): self{
+    protected function setHeader(string $key, string $value): self
+    {
         static::$__headers->set($key, $value);
         return $this;
     }
@@ -51,7 +55,8 @@ trait HasHeader{
      *
      * @return bool
      */
-    protected function hasHeader(string $name): bool{
+    protected function hasHeader(string $name): bool
+    {
         return static::$__headers->has($name);
     }
 
@@ -60,11 +65,13 @@ trait HasHeader{
      *
      * @return bool
      */
-    protected function hasAppCode(): bool{
+    protected function hasAppCode(): bool
+    {
         return $this->hasHeader('AppCode');
     }
 
-    public function hasToken(): bool{
+    public function hasToken(): bool
+    {
         return $this->hasHeader('Authorization');
     }
 
@@ -73,7 +80,8 @@ trait HasHeader{
      *
      * @return bool
      */
-    protected function hasUsername(): bool{
+    protected function hasUsername(): bool
+    {
         return $this->hasHeader('Username');
     }
 
@@ -84,8 +92,8 @@ trait HasHeader{
      *
      * @return int
      */
-    protected function generateTimestamp(){
-        return time()-strtotime('1970-01-01 00:00:00');
+    protected function generateTimestamp()
+    {
+        return time() - strtotime('1970-01-01 00:00:00');
     }
 }
-

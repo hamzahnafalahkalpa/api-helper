@@ -1,18 +1,25 @@
 <?php
 
-namespace Zahzah\ApiHelper\Models;
+namespace Hanafalah\ApiHelper\Models;
 
 use Laravel\Sanctum\Contracts\HasAbilities;
 use Laravel\Sanctum\PersonalAccessToken as LaravelPersonalAccessToken;
-use Zahzah\LaravelHasProps\Concerns\HasProps;
+use Hanafalah\LaravelHasProps\Concerns\HasProps;
 
 class PersonalAccessToken extends LaravelPersonalAccessToken implements HasAbilities
 {
     use HasProps;
 
     protected $fillable = [
-        'id','name','tokenable_type','tokenable_id','token',
-        'abilities','last_used_at','expires_at','device_id'
+        'id',
+        'name',
+        'tokenable_type',
+        'tokenable_id',
+        'token',
+        'abilities',
+        'last_used_at',
+        'expires_at',
+        'device_id'
     ];
 
     /**

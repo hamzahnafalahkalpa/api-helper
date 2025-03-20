@@ -1,9 +1,9 @@
 <?php
 
-namespace Zahzah\ApiHelper\Exceptions;
+namespace Hanafalah\ApiHelper\Exceptions;
 
 use Exception;
-use Zahzah\LaravelSupport\Concerns\Support\HasResponse;
+use Hanafalah\LaravelSupport\Concerns\Support\HasResponse;
 
 class AppNotFoundException extends Exception
 {
@@ -14,8 +14,8 @@ class AppNotFoundException extends Exception
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function render(){
+  public function render()
+  {
     return $this->sendResponse(null, 401, 'App code not found.');
   }
-
 }

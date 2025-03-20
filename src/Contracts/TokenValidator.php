@@ -1,7 +1,8 @@
 <?php
 
-namespace Zahzah\ApiHelper\Contracts;
+namespace Hanafalah\ApiHelper\Contracts;
 
-interface TokenValidator{
+interface TokenValidator
+{
     public function handle(): bool;
 }

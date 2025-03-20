@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Zahzah\ApiHelper;
+namespace Hanafalah\ApiHelper;
 
 use Laravel\Sanctum\Sanctum;
-use Zahzah\ApiHelper\Schemas\ApiAccess as SchemaApiAccess;
-use Zahzah\LaravelSupport\Providers\BaseServiceProvider;
+use Hanafalah\ApiHelper\Schemas\ApiAccess as SchemaApiAccess;
+use Hanafalah\LaravelSupport\Providers\BaseServiceProvider;
 
 class ApiHelperServiceProvider extends BaseServiceProvider
 {
     public function register()
     {
         $this->registerMainClass(ApiHelper::class)
-             ->registerCommandService(Providers\CommandServiceProvider::class)
+            ->registerCommandService(Providers\CommandServiceProvider::class)
             ->registers([
-                '*','Services' => function (){
+                '*',
+                'Services' => function () {
                     $this->binds([
                         Contracts\ApiHelper::class => new ApiHelper(),
-                        Contracts\ApiAccess::class => function($app){
+                        Contracts\ApiAccess::class => function ($app) {
                             return ApiAccess::class;
                         },
                         Schemas\ApiAccess::class => new SchemaApiAccess
@@ -32,7 +33,8 @@ class ApiHelperServiceProvider extends BaseServiceProvider
      *
      * @return void
      */
-    public function boot(){
+    public function boot()
+    {
         Sanctum::usePersonalAccessTokenModel($this->PersonalAccessTokenModelInstance());
     }
 
@@ -41,7 +43,8 @@ class ApiHelperServiceProvider extends BaseServiceProvider
      *
      * @return string
      */
-    protected function dir(): string{
-        return __DIR__.'/';
+    protected function dir(): string
+    {
+        return __DIR__ . '/';
     }
 }

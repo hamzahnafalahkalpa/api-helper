@@ -1,6 +1,6 @@
 <?php
 
-namespace Zahzah\ApiHelper\Contracts;
+namespace Hanafalah\ApiHelper\Contracts;
 
 interface ApiAccess
 {
@@ -9,6 +9,6 @@ interface ApiAccess
     public function getToken();
     public function encrypting($data);
     public function init();
-    public function generateToken(? callable $callback=null): string;
+    public function generateToken(?callable $callback = null): string;
     // public function response($callback);
 }

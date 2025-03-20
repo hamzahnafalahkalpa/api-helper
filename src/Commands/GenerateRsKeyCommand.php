@@ -1,8 +1,8 @@
 <?php
 
-namespace Zahzah\ApiHelper\Commands;
+namespace Hanafalah\ApiHelper\Commands;
 
-use Zahzah\ApiHelper\Concerns\ApiAccessPrompt;
+use Hanafalah\ApiHelper\Concerns\ApiAccessPrompt;
 use Illuminate\Support\Str;
 
 class GenerateRsKeyCommand extends EnvironmentCommand
@@ -31,19 +31,19 @@ class GenerateRsKeyCommand extends EnvironmentCommand
     public function handle()
     {
         $algorithm = $this->option('algorithm');
-        if (isset($algorithm)){
-            $fam = Str::substr($algorithm,0,2);
+        if (isset($algorithm)) {
+            $fam = Str::substr($algorithm, 0, 2);
         }
-        list($public,$private) = $this->generate($algorithm,$fam); 
+        list($public, $private) = $this->generate($algorithm, $fam);
         $appCode   = $this->option('app-code');
-        if (isset($appCode)){
-            $apiAccess = $this->ApiAccessModel()->where('app_code',$appCode)->first();
+        if (isset($appCode)) {
+            $apiAccess = $this->ApiAccessModel()->where('app_code', $appCode)->first();
             $apiAccess->public_key     = $public;
             $apiAccess->private_key    = $private;
             $apiAccess->reference_id   = $this->option('reference-id');
             $apiAccess->reference_type = $this->option('reference-type');
             $apiAccess->save();
-        }        
+        }
     }
 
     /**
@@ -53,9 +53,10 @@ class GenerateRsKeyCommand extends EnvironmentCommand
      *
      * @return array
      */
-    protected function generate($algorithm=null,? string $family = null){
-        $algorithm = $this->chooseAlgorithm($algorithm,$family);
-        $this->info('Generating using '.$algorithm.' key...');
+    protected function generate($algorithm = null, ?string $family = null)
+    {
+        $algorithm = $this->chooseAlgorithm($algorithm, $family);
+        $this->info('Generating using ' . $algorithm . ' key...');
         switch ($family) {
             case 'RS':
                 $key = openssl_pkey_new([
@@ -66,16 +67,15 @@ class GenerateRsKeyCommand extends EnvironmentCommand
                 openssl_pkey_export($key, $privateKey);
                 $details   = openssl_pkey_get_details($key);
                 $publicKey = $details['key'];
-            break;
+                break;
             case 'ES':
                 $keyPair    = sodium_crypto_sign_keypair();
                 $privateKey = base64_encode(sodium_crypto_sign_secretkey($keyPair));
                 $publicKey  = base64_encode(sodium_crypto_sign_publickey($keyPair));
-            break;
+                break;
         }
-        $this->info("Private Key:\n".$privateKey);
-        $this->info("Public Key:\n".$publicKey);
-        return [$publicKey,$privateKey];
+        $this->info("Private Key:\n" . $privateKey);
+        $this->info("Public Key:\n" . $publicKey);
+        return [$publicKey, $privateKey];
     }
 }
-

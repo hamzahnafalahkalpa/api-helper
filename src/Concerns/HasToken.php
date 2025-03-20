@@ -1,19 +1,21 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
-use Zahzah\ApiHelper\Exceptions;
+use Hanafalah\ApiHelper\Exceptions;
 
-trait HasToken{
+trait HasToken
+{
     protected static string $__token;
-    protected string $__token_access_name = 'access-token';    
+    protected string $__token_access_name = 'access-token';
 
     /**
      * Gets the token of the current instance.
      *
      * @return string|null
      */
-    public function getToken() : ?string{
+    public function getToken(): ?string
+    {
         return static::$__token ?? null;
     }
 
@@ -23,10 +25,11 @@ trait HasToken{
      * @param string|null $token The token to set.
      * @return self
      */
-    protected function setToken(?string $token=null): self{
+    protected function setToken(?string $token = null): self
+    {
         static::$__token = $token ?? $this->getApiAccess()->token;
         self::$__generated_token['token'] = static::$__token;
         self::$__generated_token['token'] = static::$__token;
         return $this;
-    }    
+    }
 }

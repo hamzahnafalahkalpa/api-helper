@@ -1,15 +1,15 @@
 <?php
 
-namespace Zahzah\ApiHelper;
+namespace Hanafalah\ApiHelper;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Zahzah\ApiHelper\Contracts\ApiAccess as ContractsApiAccess;
-use Zahzah\ApiHelper\Schemas\Token;
-use Zahzah\ApiHelper\Supports\BaseApiAccess;
+use Hanafalah\ApiHelper\Contracts\ApiAccess as ContractsApiAccess;
+use Hanafalah\ApiHelper\Schemas\Token;
+use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 
 class ApiAccess extends BaseApiAccess implements ContractsApiAccess
-{        
+{
   public int $__expiration, $__expiration_config;
 
   /**
@@ -23,23 +23,31 @@ class ApiAccess extends BaseApiAccess implements ContractsApiAccess
    * @throws \Exceptions\UnauthorizedAccess
    * @return self
    */
-  public function init(): self{   
+  public function init(): self
+  {
     $this->setCollectHeader();
     if (!request()->hasHeader('Authorization')) throw new Exceptions\UnauthorizedAccess;
     $this->__expiration_config = config('api-helper.expiration');
     $this->expiration();
-    $authorization        = Str::replace('Bearer ','',self::$__headers->get('Authorization'));
+    $authorization        = Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
     self::$__access_token = $this->PersonalAccessTokenModel()->findToken($authorization);
-    $this->__authorization = is_numeric(Str::position($authorization,'|')) 
-                              ? explode('|',$authorization)[1]
-                              : $authorization;
+    $this->__authorization = is_numeric(Str::position($authorization, '|'))
+      ? explode('|', $authorization)[1]
+      : $authorization;
     //IF REQUEST HAS TOKEN
-    
+
     switch (true) {
-      case $this->hasAppCode()  : $this->initByAppCode();break;        
-      case $this->hasToken()    : $this->initByToken();break;
-      case $this->hasUsername() : $this->initByUsername();break;  
-      default                   : throw new Exceptions\UnauthorizedAccess;
+      case $this->hasAppCode():
+        $this->initByAppCode();
+        break;
+      case $this->hasToken():
+        $this->initByToken();
+        break;
+      case $this->hasUsername():
+        $this->initByUsername();
+        break;
+      default:
+        throw new Exceptions\UnauthorizedAccess;
     }
     return $this;
   }
@@ -58,10 +66,11 @@ class ApiAccess extends BaseApiAccess implements ContractsApiAccess
    * 
    * @return self
    */
-  public function accessOnLogin(callable $callback): self{
-    if (isset(self::$__decode_result->aud)){
+  public function accessOnLogin(callable $callback): self
+  {
+    if (isset(self::$__decode_result->aud)) {
       $validation = $this->forAuthenticate()->useSchema(Token::class)->getClass()->handle();
-      if ($validation){
+      if ($validation) {
         $callback($this);
       }
     }
@@ -75,7 +84,8 @@ class ApiAccess extends BaseApiAccess implements ContractsApiAccess
    *
    * @return self
    */
-  public function setEncryption($class): self{
+  public function setEncryption($class): self
+  {
     config([
       'api-helper.encryption' => $class
     ]);
@@ -92,8 +102,9 @@ class ApiAccess extends BaseApiAccess implements ContractsApiAccess
    *
    * @return int The expiration time in minutes.
    */
-  public function expiration(? int $custom = null): int{
-    if (isset($custom)){
+  public function expiration(?int $custom = null): int
+  {
+    if (isset($custom)) {
       config([
         'api-helper.expiration' => $custom
       ]);
@@ -107,7 +118,8 @@ class ApiAccess extends BaseApiAccess implements ContractsApiAccess
    *
    * @return self
    */
-  public function generateToken(? callable $callback = null): string{
+  public function generateToken(?callable $callback = null): string
+  {
     $token = $this->forToken()->useSchema(Token::class)->getClass()->handle();
     $this->setToken($token)->updateCounter();
 
@@ -117,18 +129,19 @@ class ApiAccess extends BaseApiAccess implements ContractsApiAccess
       'plainTextToken' => $token,
       'props'          => $props
     ];
-    $access_token = $this->getUser()->setToken($this->__token_access_name,$data,['*'],self::$__generated_token['expires_at']);
-    if (isset($callback)){
+    $access_token = $this->getUser()->setToken($this->__token_access_name, $data, ['*'], self::$__generated_token['expires_at']);
+    if (isset($callback)) {
       $callback($this);
-    }    
-    return $access_token->plainTextToken; 
+    }
+    return $access_token->plainTextToken;
   }
 
-  public function secure(callable $callback, array $middlewares = []): void{
-    $middlewares = $this->mergeArray(self::$__api_helper_config['middlewares'],$middlewares);
+  public function secure(callable $callback, array $middlewares = []): void
+  {
+    $middlewares = $this->mergeArray(self::$__api_helper_config['middlewares'], $middlewares);
     Route::group([
       'middleware' => $middlewares
-    ],function() use ($callback){
+    ], function () use ($callback) {
       $callback();
     });
   }

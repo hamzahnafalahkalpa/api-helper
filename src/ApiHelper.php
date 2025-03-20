@@ -1,16 +1,17 @@
 <?php
 
-namespace Zahzah\ApiHelper;
+namespace Hanafalah\ApiHelper;
 
 use Illuminate\Http\Request as HttpRequest;
-use Zahzah\LaravelSupport\Concerns\Support as Support;
+use Hanafalah\LaravelSupport\Concerns\Support as Support;
 
-class ApiHelper {
+class ApiHelper
+{
   use Support\HasArray;
   use Support\HasResponse;
   use Support\HasRepository;
 
-  private $__request,$__class_request, $__results = [],$__aliases;
+  private $__request, $__class_request, $__results = [], $__aliases;
 
   /**
    * Applies a given callable function to the current instance, passing it as an argument.
@@ -18,8 +19,9 @@ class ApiHelper {
    * @param callable $callable A function to be applied to the current instance.
    * @return self The current instance after applying the callable function.
    */
-  public function scope($class,callable $callable,$alias=null): self{
-    $this->mainScope($class,$callable,$alias);
+  public function scope($class, callable $callable, $alias = null): self
+  {
+    $this->mainScope($class, $callable, $alias);
     return $this;
   }
 
@@ -31,9 +33,10 @@ class ApiHelper {
    * @param string $alias The alias of the scope.
    * @return self The current instance after applying the callable function.
    */
-  public function selfScope($request, callable $callable,$alias=null): self{
+  public function selfScope($request, callable $callable, $alias = null): self
+  {
     $alias ??= 'self';
-    $this->mainScope(self::class,$callable,$alias, $request);
+    $this->mainScope(self::class, $callable, $alias, $request);
     return $this;
   }
 
@@ -46,12 +49,13 @@ class ApiHelper {
    * @param \Illuminate\Http\Request $request The request object.
    * @return self The current instance after applying the callable function.
    */
-  private function mainScope($class,callable $callable,$alias=null,$request=null): self{
+  private function mainScope($class, callable $callable, $alias = null, $request = null): self
+  {
     $this->__request = (isset($request)) ? $request->all() : request()->all();
     $result = $callable($this);
     $this->newRequest($this->__request);
-    $this->__results[$this->getClassName($class,$alias)] = $result;
-    $this->setRuquest($this->__request,false);
+    $this->__results[$this->getClassName($class, $alias)] = $result;
+    $this->setRuquest($this->__request, false);
     return $this;
   }
 
@@ -64,8 +68,9 @@ class ApiHelper {
    * @param string $alias The alias of the scope.
    * @return self The current instance after applying the callable function.
    */
-  public function scopeWhen(bool $condition,$class,callable $callable,$alias=null): self{
-    if ($condition) $this->scope($class,$callable,$alias);
+  public function scopeWhen(bool $condition, $class, callable $callable, $alias = null): self
+  {
+    if ($condition) $this->scope($class, $callable, $alias);
     return $this;
   }
 
@@ -76,14 +81,15 @@ class ApiHelper {
    * @param string $alias The alias of the scope.
    * @return string The class base name of the given class or the alias if it exists.
    */
-  private function getClassName($class,$alias=null){
+  private function getClassName($class, $alias = null)
+  {
     $class_name = $this->getClassBaseName($class);
 
-    if (isset($alias)){
-      $name = $this->checkingAlias($class,$alias);
-      if (!isset($this->__aliases[$alias])) $name = $this->checkingAlias($class,$class_name);
-    }else{
-      $name = $this->checkingAlias($class,$class_name);
+    if (isset($alias)) {
+      $name = $this->checkingAlias($class, $alias);
+      if (!isset($this->__aliases[$alias])) $name = $this->checkingAlias($class, $class_name);
+    } else {
+      $name = $this->checkingAlias($class, $class_name);
     }
     return $name;
   }
@@ -97,10 +103,11 @@ class ApiHelper {
    * @param string $name The alias to be checked.
    * @return string The class name of the given class or the alias if it exists.
    */
-  private function checkingAlias($class,$name){
+  private function checkingAlias($class, $name)
+  {
     (!isset($this->__aliases[$name]))
-    ? $this->__aliases[$name] = \class_basename($class)
-    : $name = \get_class($class);
+      ? $this->__aliases[$name] = \class_basename($class)
+      : $name = \get_class($class);
     return $name;
   }
 
@@ -110,9 +117,10 @@ class ApiHelper {
    * @param array $add The parameters to add to the current request.
    * @return self
    */
-  public function newRequest($add=[],$classRequest = null) : HttpRequest{
-    if (request()->has('page')){
-      $add = $this->mergeArray($add,[
+  public function newRequest($add = [], $classRequest = null): HttpRequest
+  {
+    if (request()->has('page')) {
+      $add = $this->mergeArray($add, [
         'page' => request()->get('page')
       ]);
     }
@@ -128,7 +136,8 @@ class ApiHelper {
    * @param bool $new Whether to create a new request or merge with the existing one.
    * @return self The current instance after setting the request.
    */
-  private function setRuquest($add=[],$new=true): self{
+  private function setRuquest($add = [], $new = true): self
+  {
     if (!$new) $this->__class_request = HttpRequest::class;
     $this->requestReplace($this->makeRequest($add));
     return $this;
@@ -140,10 +149,11 @@ class ApiHelper {
    * @param array $args The parameters to add to the current ->rurequest.
    * @return array The merged request parameters.
    */
-  private function makeRequest($args){    
-    $request = new $this->__class_request($this->filterArray($args, fn ($value) => $value !== null));
+  private function makeRequest($args)
+  {
+    $request = new $this->__class_request($this->filterArray($args, fn($value) => $value !== null));
     if ($this->__class_request !== HttpRequest::class) {
-        $request->validate($request->rules(), $request->all());
+      $request->validate($request->rules(), $request->all());
     }
     $this->__class_request = $request;
     return $request->all();
@@ -155,8 +165,9 @@ class ApiHelper {
    * @param array $args The parameters to replace the current request with.
    * @return self The current instance after replacing the request.
    */
-  private function requestReplace(): self{
-    if(isset($this->__class_request)) request()->replace($this->__class_request->all());
+  private function requestReplace(): self
+  {
+    if (isset($this->__class_request)) request()->replace($this->__class_request->all());
     return $this;
   }
 
@@ -165,7 +176,8 @@ class ApiHelper {
    *
    * @return array The results of the current instance.
    */
-  public function results(): array{
+  public function results(): array
+  {
     return $this->__results;
   }
 
@@ -175,7 +187,8 @@ class ApiHelper {
    * @param string|null $specific The specific key in the results to return if set.
    * @return \Illuminate\Http\JsonResponse The response that will be returned to the user.
    */
-  public function response($specific=null): \Illuminate\Http\JsonResponse{
+  public function response($specific = null): \Illuminate\Http\JsonResponse
+  {
     $results = $this->results();
     if (isset($specific)) $results = $results[$specific];
     return $this->sendResponse($results);
@@ -187,7 +200,8 @@ class ApiHelper {
    *
    * @return \Illuminate\Http\JsonResponse The response containing the result of the self-scope.
    */
-  public function selfResponse(): \Illuminate\Http\JsonResponse{
+  public function selfResponse(): \Illuminate\Http\JsonResponse
+  {
     return $this->response('self');
   }
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-trait AlgorithmRS{
+trait AlgorithmRS
+{
     protected string $__private_key, $__public_key;
 
     /**
@@ -14,9 +15,10 @@ trait AlgorithmRS{
      *
      * @return string The encrypted token.
      */
-    protected function algorithmRS(){
+    protected function algorithmRS()
+    {
         return ($this->__encrypt) ? JWT::encode(self::$__payload, $this->__private_key, static::$__algorithm)
-                       : JWT::decode(self::$__payload, new Key($this->__public_key, static::$__algorithm),$this->__rsJwtHeaders);        
+            : JWT::decode(self::$__payload, new Key($this->__public_key, static::$__algorithm), $this->__rsJwtHeaders);
     }
 
     /**
@@ -28,7 +30,8 @@ trait AlgorithmRS{
      * @param string $key The public key to be used.
      * @return self The current instance after setting the public key.
      */
-    protected function setPublicKey(string $key = null): self{
+    protected function setPublicKey(string $key = null): self
+    {
         $this->__public_key = $key ?? $this->getApiAccess()->public_key;
         return $this;
     }
@@ -42,12 +45,14 @@ trait AlgorithmRS{
      * @param string $key The private key to be used.
      * @return self The current instance after setting the private key.
      */
-    protected function setPrivateKey(string $key = null): self{
+    protected function setPrivateKey(string $key = null): self
+    {
         $this->__private_key = $key ?? $this->getApiAccess()->private_key;
         return $this;
     }
 
-    protected function setRsKeys(): self{
+    protected function setRsKeys(): self
+    {
         $this->setPublicKey()->setPrivateKey();
         return $this;
     }
@@ -57,7 +62,8 @@ trait AlgorithmRS{
      *
      * @return string The public key.
      */
-    protected function getPublicKey(): string{
+    protected function getPublicKey(): string
+    {
         return $this->__public_key;
     }
 
@@ -66,7 +72,8 @@ trait AlgorithmRS{
      *
      * @return string The private key.
      */
-    protected function getPrivateKey(): string{
+    protected function getPrivateKey(): string
+    {
         return $this->__private_key;
     }
 
@@ -76,8 +83,9 @@ trait AlgorithmRS{
      *
      * @return string The encrypted token.
      */
-    protected function processRS(){
+    protected function processRS()
+    {
         $key = ($this->__encrypt) ? $this->__private_key : $this->__public_key;
-        return $this->process($key);        
+        return $this->process($key);
     }
 }

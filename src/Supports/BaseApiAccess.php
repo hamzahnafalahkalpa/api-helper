@@ -1,21 +1,22 @@
 <?php
 
-namespace Zahzah\ApiHelper\Supports;
+namespace Hanafalah\ApiHelper\Supports;
 
-use Zahzah\ApiHelper\{
+use Hanafalah\ApiHelper\{
     Exceptions,
     Concerns
 };
-use Zahzah\LaravelSupport\Concerns\{
+use Hanafalah\LaravelSupport\Concerns\{
     Support as ConcernSupport,
     DatabaseConfiguration as DatabaseConcernSupport
 };
-use Zahzah\LaravelSupport\Concerns\Support\ErrorHandling;
-use Zahzah\LaravelSupport\Contracts\DataManagement;
-use Zahzah\LaravelSupport\Supports\PackageManagement;
+use Hanafalah\LaravelSupport\Concerns\Support\ErrorHandling;
+use Hanafalah\LaravelSupport\Contracts\DataManagement;
+use Hanafalah\LaravelSupport\Supports\PackageManagement;
 
 
-class BaseApiAccess extends PackageManagement{
+class BaseApiAccess extends PackageManagement
+{
     use Concerns\HasHeader,
         Concerns\HasEncryptor,
         Concerns\HasCounter,
@@ -36,14 +37,15 @@ class BaseApiAccess extends PackageManagement{
 
     public static $__generated_token = [
         'token' => null,
-        'expires_at' => null    
+        'expires_at' => null
     ];
     protected static $__reason;
     protected $__threshold = 1800;
 
 
-    public function __construct(...$args){
-        if ($this->notReady()){
+    public function __construct(...$args)
+    {
+        if ($this->notReady()) {
             $this->initialized();
 
             $this->setLocalConfig('api-helper');
@@ -59,14 +61,19 @@ class BaseApiAccess extends PackageManagement{
      * @throws \Exceptions\AppNotFoundException
      * @return self
      */
-    public function setApiAccessByAppCode(): self{
+    public function setApiAccessByAppCode(): self
+    {
         $api_access = $this->getApiAccess()->select([
-            'id','app_code','props','reference_type','reference_id'
+            'id',
+            'app_code',
+            'props',
+            'reference_type',
+            'reference_id'
         ])->findAppCode(static::$__app_code)->first();
         if (!isset($api_access)) throw new Exceptions\AppNotFoundException;
-        $this->setApiAccess($api_access);        
+        $this->setApiAccess($api_access);
         return $this;
-    }    
+    }
 
     /**
      * Set API access by username.
@@ -74,7 +81,8 @@ class BaseApiAccess extends PackageManagement{
      * @throws \Exceptions\AppNotFoundException
      * @return self
      */
-    protected function setApiAccessByUsername(): self{
+    protected function setApiAccessByUsername(): self
+    {
         static::$__username = static::$__headers->get('Username');
         $api_access = static::getApiAccess()->findUsername(static::$__headers->get('Username'))->first();
         if (!isset($api_access)) throw new Exceptions\AppNotFoundException;
@@ -88,38 +96,43 @@ class BaseApiAccess extends PackageManagement{
      * @throws \Exceptions\TokenMistmatchException
      * @return self
      */
-    protected function setApiAccessByToken(): self{
+    protected function setApiAccessByToken(): self
+    {
         $api_access = $this->getApiAccess()->findToken($this->getToken())->first();
         if (!isset($api_access)) throw new Exceptions\TokenMistmatchException;
         $this->setApiAccess($api_access);
         return $this;
-    }    
-    
+    }
+
     /**
      * Set the reason to generate token.
      *
      * @return self
      */
-    public function forToken(): self{
+    public function forToken(): self
+    {
         self::$__reason = self::FOR_TOKEN;
         return $this;
     }
 
-    public function forAuthenticate(): self{
+    public function forAuthenticate(): self
+    {
         self::$__reason = self::FOR_AUTHENTICATE;
         return $this;
     }
-    
+
     /**
      * Checks if the token is being generated for an API access.
      *
      * @return bool True if the token is being generated for an API access, false otherwise.
      */
-    public function isForToken(): bool{
+    public function isForToken(): bool
+    {
         return self::$__reason === self::FOR_TOKEN;
     }
-    
-    public function isForAuthenticate(): bool{
+
+    public function isForAuthenticate(): bool
+    {
         return self::$__reason === self::FOR_AUTHENTICATE;
     }
 
@@ -128,7 +141,8 @@ class BaseApiAccess extends PackageManagement{
      *
      * @return string One of the self::REASON_ constants.
      */
-    public function getReason(): string{
+    public function getReason(): string
+    {
         return self::$__reason;
     }
 
@@ -137,7 +151,8 @@ class BaseApiAccess extends PackageManagement{
      *
      * @return string|null
      */
-    public function getJti(): ?string{
+    public function getJti(): ?string
+    {
         return self::$__generated_token['jti'] ?? null;
     }
 
@@ -146,7 +161,8 @@ class BaseApiAccess extends PackageManagement{
      *
      * @return self
      */
-    public function setExpirationToken(mixed $expiration): self{
+    public function setExpirationToken(mixed $expiration): self
+    {
         self::$__generated_token['expires_at'] = $expiration;
         return $this;
     }

@@ -1,30 +1,32 @@
 <?php
 
-namespace Zahzah\ApiHelper\Encryptions;
+namespace Hanafalah\ApiHelper\Encryptions;
 
-use Zahzah\ApiHelper\{
+use Hanafalah\ApiHelper\{
     Concerns\AlgorithmRS,
     Concerns\AlgorithmHS,
     Contracts\EncryptorInterface,
     Supports\BaseApiAccess
 };
-use Zahzah\LaravelSupport\Concerns\Support\HasArray;
+use Hanafalah\LaravelSupport\Concerns\Support\HasArray;
 
-abstract class Environment extends BaseApiAccess implements EncryptorInterface{
+abstract class Environment extends BaseApiAccess implements EncryptorInterface
+{
     use AlgorithmRS;
     use AlgorithmHS;
     use HasArray;
 
     protected bool $__encrypt = true;
 
-    abstract public function handle():mixed;
+    abstract public function handle(): mixed;
 
     /**
      * Encrypts the given string.
      *
      * @return self The current instance with the encrypted string.
      */
-    protected function encrypt(): self{
+    protected function encrypt(): self
+    {
         $this->__encrypt = true;
         return $this;
     }
@@ -34,7 +36,8 @@ abstract class Environment extends BaseApiAccess implements EncryptorInterface{
      *
      * @return self The current instance with the decrypted string.
      */
-    protected function decrypt(): self{
+    protected function decrypt(): self
+    {
         $this->__encrypt = false;
         return $this;
     }

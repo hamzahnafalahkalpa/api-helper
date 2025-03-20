@@ -1,9 +1,9 @@
 <?php
 
-namespace Zahzah\ApiHelper\Exceptions;
+namespace Hanafalah\ApiHelper\Exceptions;
 
 use Exception;
-use Zahzah\LaravelSupport\Concerns\Support\HasResponse;
+use Hanafalah\LaravelSupport\Concerns\Support\HasResponse;
 
 class UnauthorizedAccess extends Exception
 {
@@ -14,7 +14,8 @@ class UnauthorizedAccess extends Exception
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function render(){
+  public function render()
+  {
     return $this->sendResponse(null, 401, 'Unauthorized Access.');
   }
 }

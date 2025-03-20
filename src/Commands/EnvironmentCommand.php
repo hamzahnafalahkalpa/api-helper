@@ -1,19 +1,22 @@
 <?php
 
-namespace Zahzah\ApiHelper\Commands;
+namespace Hanafalah\ApiHelper\Commands;
 
-use Zahzah\LaravelSupport\Concerns\ServiceProvider\HasMigrationConfiguration;
+use Hanafalah\LaravelSupport\Concerns\ServiceProvider\HasMigrationConfiguration;
 
-class EnvironmentCommand extends \Zahzah\LaravelSupport\Commands\BaseCommand{
+class EnvironmentCommand extends \Hanafalah\LaravelSupport\Commands\BaseCommand
+{
     use HasMigrationConfiguration;
 
-    protected function init(): self{
+    protected function init(): self
+    {
         //INITIALIZE SECTION
         $this->setLocalConfig('api-helper');
         return $this;
     }
 
-    protected function dir(): string{
-        return __DIR__.'/../';
+    protected function dir(): string
+    {
+        return __DIR__ . '/../';
     }
 }

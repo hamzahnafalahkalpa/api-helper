@@ -1,10 +1,7 @@
 <?php
 
-namespace Zahzah\ApiHelper\Contracts;
+namespace Hanafalah\ApiHelper\Contracts;
 
-use Zahzah\LaravelSupport\Contracts\DataManagement;
+use Hanafalah\LaravelSupport\Contracts\DataManagement;
 
-interface SchemaApiAccess extends DataManagement
-{
-
-}
+interface SchemaApiAccess extends DataManagement {}

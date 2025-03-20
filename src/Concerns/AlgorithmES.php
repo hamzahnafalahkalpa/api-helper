@@ -1,8 +1,9 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
-trait AlgorithmES{
+trait AlgorithmES
+{
     use AlgorithmRS;
 
     /**
@@ -11,11 +12,13 @@ trait AlgorithmES{
      *
      * @return string The encrypted token.
      */
-    protected function algorithmES(){
+    protected function algorithmES()
+    {
         return $this->algorithmRS();
     }
 
-    protected function setEsKeys(): self{
+    protected function setEsKeys(): self
+    {
         $this->setRsKeys();
         return $this;
     }
@@ -26,7 +29,8 @@ trait AlgorithmES{
      *
      * @return string The encrypted token.
      */
-    protected function processES(){
+    protected function processES()
+    {
         return $this->processRS();
     }
 }

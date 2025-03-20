@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Zahzah\ApiHelper\Models\PersonalAccessToken;
-use Zahzah\LaravelSupport\Concerns\NowYouSeeMe;
+use Hanafalah\ApiHelper\Models\PersonalAccessToken;
+use Hanafalah\LaravelSupport\Concerns\NowYouSeeMe;
 
 return new class extends Migration
 {
@@ -12,7 +12,8 @@ return new class extends Migration
 
     private $__table;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->__table = app(config('database.models.PersonalAccessToken', PersonalAccessToken::class));
     }
 
@@ -22,11 +23,11 @@ return new class extends Migration
     public function up(): void
     {
         $table_name = $this->__table->getTable();
-        if (!$this->isTableExists()){
+        if (!$this->isTableExists()) {
             Schema::create($table_name, function (Blueprint $table) {
                 $table->id();
-                $table->string('tokenable_type',50)->nullable(false);
-                $table->string('tokenable_id',36)->nullable(false);
+                $table->string('tokenable_type', 50)->nullable(false);
+                $table->string('tokenable_id', 36)->nullable(false);
                 $table->string('name');
                 $table->string('token', 64)->unique();
                 $table->text('abilities')->nullable();
@@ -36,7 +37,7 @@ return new class extends Migration
                 $table->json('props')->nullable();
                 $table->timestamps();
 
-                $table->index(['tokenable_type','tokenable_id'],'tokenable');
+                $table->index(['tokenable_type', 'tokenable_id'], 'tokenable');
             });
         }
     }

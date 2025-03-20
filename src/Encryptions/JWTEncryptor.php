@@ -1,18 +1,20 @@
 <?php
 
-namespace Zahzah\ApiHelper\Encryptions;
+namespace Hanafalah\ApiHelper\Encryptions;
 
 use Firebase\JWT\{
-    JWT, Key
+    JWT,
+    Key
 };
-use Zahzah\ApiHelper\{
+use Hanafalah\ApiHelper\{
     Contracts\EncryptorInterface,
     Facades\ApiAccess
 };
 use Ramsey\Uuid\Uuid;
 use stdClass;
 
-class JWTEncryptor extends Environment implements EncryptorInterface{
+class JWTEncryptor extends Environment implements EncryptorInterface
+{
     protected $__rsJwtHeaders;
 
     private $__jwt_payload = [
@@ -23,7 +25,7 @@ class JWTEncryptor extends Environment implements EncryptorInterface{
         'sub'  => null,  // Subject (user or entity the token refers to)
         'jti'  => null,  // JWT ID (unique identifier for the token)
         'data' => []     // Custom claims (application-specific data)
-    ];   
+    ];
 
     /**
      * Constructor method.
@@ -35,9 +37,10 @@ class JWTEncryptor extends Environment implements EncryptorInterface{
      *
      * @return void
      */
-    public function __construct(){   
+    public function __construct()
+    {
         $this->__rsJwtHeaders = new stdClass();
-        self::$__payload ??= [];        
+        self::$__payload ??= [];
     }
 
     /**
@@ -46,24 +49,25 @@ class JWTEncryptor extends Environment implements EncryptorInterface{
      *
      * @return mixed
      */
-    public function handle(): mixed{
+    public function handle(): mixed
+    {
         $this->setAlgorithm($this->getApiAccess()->algorithm);
         switch (self::$__algorithm) {
             case 'RS256':
             case 'RS384':
             case 'RS512':
                 $result = $this->setRsKeys()->processRS();
-            break;
+                break;
             case 'ES256':
             case 'ES384':
             case 'ES512':
                 $result = $this->setEsKeys()->processES();
-            break;
+                break;
             case 'HS256':
             case 'HS384':
             case 'HS512':
                 $result = $this->setSecretKey()->processHS();
-            break;
+                break;
         }
         return $result;
     }
@@ -73,20 +77,21 @@ class JWTEncryptor extends Environment implements EncryptorInterface{
      *
      * @return self
      */
-    public function setupJwtPayload(mixed $payload = null): self{
+    public function setupJwtPayload(mixed $payload = null): self
+    {
         $payload ??= self::$__payload;
-        $time = time();  
+        $time = time();
         $exp  = $time + ApiAccess::expiration();
         $jti  = Uuid::uuid4()->toString();
-        $this->__jwt_payload = $this->mergeArray($this->__jwt_payload,[
+        $this->__jwt_payload = $this->mergeArray($this->__jwt_payload, [
             'iss'  => $_SERVER['HTTP_REFERER'] ?? null,
             'aud'  => $_SERVER['HTTP_HOST'] ?? null,
             'iat'  => $time,
             'jti'  => $jti,
             'exp'  => $exp,
             'data' => (is_array($payload))
-                    ? array_merge($this->__jwt_payload['data'], $payload)
-                    : $payload
+                ? array_merge($this->__jwt_payload['data'], $payload)
+                : $payload
         ]);
         $this->setExpirationToken($exp)->setJTI($jti);
         return $this;
@@ -97,7 +102,8 @@ class JWTEncryptor extends Environment implements EncryptorInterface{
      *
      * @return stdClass The header of the JWT token.
      */
-    protected function getRsJwtHeader(){
+    protected function getRsJwtHeader()
+    {
         return $this->__rsJwtHeaders;
     }
 
@@ -113,23 +119,25 @@ class JWTEncryptor extends Environment implements EncryptorInterface{
      * @throws \Firebase\JWT\BeforeValidException
      * @throws \DomainException
      */
-    protected function process(string $key){
+    protected function process(string $key)
+    {
         $leeway = 60; // misalnya 60 detik toleransi
         JWT::$leeway = $leeway; // Set leeway sebelum decode
         if ($this->__encrypt) {
             $this->setupJwtPayload();
             return JWT::encode($this->__jwt_payload, $key, static::$__algorithm);
-        }else{
-            return JWT::decode(self::$__payload, new Key($key, static::$__algorithm),$this->__rsJwtHeaders);
+        } else {
+            return JWT::decode(self::$__payload, new Key($key, static::$__algorithm), $this->__rsJwtHeaders);
         }
     }
-    
+
     /**
      * Set the JTI of the token in the database.
      *
      * @return self
      */
-    protected function setJTI(string $jti): self{
+    protected function setJTI(string $jti): self
+    {
         self::$__generated_token['jti'] = $jti;
         return $this;
     }

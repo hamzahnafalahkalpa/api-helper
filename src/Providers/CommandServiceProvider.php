@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zahzah\ApiHelper\Providers;
+namespace Hanafalah\ApiHelper\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Zahzah\ApiHelper\Commands as Commands;
+use Hanafalah\ApiHelper\Commands as Commands;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -20,8 +20,9 @@ class CommandServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register(){
-        $this->commands(config('api-helper.commands',$this->commands));
+    public function register()
+    {
+        $this->commands(config('api-helper.commands', $this->commands));
     }
 
     public function provides()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zahzah\ApiHelper\Requests\Token;
+namespace Hanafalah\ApiHelper\Requests\Token;
 
 use Illuminate\Foundation\Http\FormRequest;
 

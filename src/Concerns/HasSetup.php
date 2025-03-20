@@ -1,21 +1,22 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
-use Zahzah\ApiHelper\{
+use Hanafalah\ApiHelper\{
     Exceptions
 };
 
-use Zahzah\LaravelHasProps\Concerns\HasProps;
+use Hanafalah\LaravelHasProps\Concerns\HasProps;
 
-trait HasSetup{
+trait HasSetup
+{
     protected static $__api_access;
-    protected static string         
-        $__username, 
+    protected static string
+        $__username,
         $__timestamp,
-        $__req_username, 
+        $__req_username,
         $__req_password,
-        $__req_secret, 
+        $__req_secret,
         $__app_code,
         $__app_key;
     protected static array $__injectors = [];
@@ -26,7 +27,8 @@ trait HasSetup{
      *
      * @return string The app key associated with the current instance.
      */
-    protected function getAppKey(): string{
+    protected function getAppKey(): string
+    {
         return static::$__app_key;
     }
 
@@ -35,7 +37,8 @@ trait HasSetup{
      *
      * @return int|string The timestamp associated with the current instance.
      */
-    protected function getTimestamp(): int|string{
+    protected function getTimestamp(): int|string
+    {
         return static::$__timestamp;
     }
 
@@ -44,17 +47,19 @@ trait HasSetup{
      *
      * @return string The token associated with the current instance.
      */
-    protected function setTimestamp($timestamp): self{
+    protected function setTimestamp($timestamp): self
+    {
         static::$__timestamp = $timestamp;
         return $this;
-    }    
+    }
 
     /**
      * Returns the app code that is currently set.
      *
      * @return string|null
      */
-    protected function getAppCode(): ?string{
+    protected function getAppCode(): ?string
+    {
         return static::$__app_code;
     }
 
@@ -63,7 +68,8 @@ trait HasSetup{
      *
      * @return mixed
      */
-    public function getApiAccess(): mixed{
+    public function getApiAccess(): mixed
+    {
         return static::$__api_access ?? $this->ApiAccessModel();
     }
 
@@ -76,36 +82,40 @@ trait HasSetup{
      * @param string|null $app_code description of the app code
      * @return self
      */
-    public function setAppCode(?string $app_code=null): self{
+    public function setAppCode(?string $app_code = null): self
+    {
         static::$__app_code = $app_code ?? static::$__api_access->app_code;
         return $this;
     }
-    
+
     /**
      * Set the API access and app code.
      *
      * @param datatype $api_access description of the API access
      * @return mixed
      */
-    protected function setApiAccess($api_access): mixed{
+    protected function setApiAccess($api_access): mixed
+    {
         self::$__api_access = $api_access;
         return static::class;
     }
 
-    protected function setInjector(mixed $data): self{
-        (is_array($data)) 
-            ? self::$__injectors = array_merge(self::$__injectors,$data)
+    protected function setInjector(mixed $data): self
+    {
+        (is_array($data))
+            ? self::$__injectors = array_merge(self::$__injectors, $data)
             : self::$__injectors[] = $data;
-        
+
         return $this;
-    }    
+    }
 
     /**
      * Returns the username from the AppKey header.
      *
      * @return string
      */
-    protected function getReqUsername(): string{
+    protected function getReqUsername(): string
+    {
         return static::$__req_username;
     }
 
@@ -114,11 +124,13 @@ trait HasSetup{
      *
      * @return string
      */
-    protected function getReqSecret(): string{
+    protected function getReqSecret(): string
+    {
         return static::$__req_secret;
     }
 
-    protected function getReqPassword(): string{
+    protected function getReqPassword(): string
+    {
         return static::$__req_password;
     }
 }

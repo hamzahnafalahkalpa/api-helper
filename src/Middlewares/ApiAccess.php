@@ -1,8 +1,8 @@
 <?php
 
-namespace Zahzah\ApiHelper\Middlewares;
+namespace Hanafalah\ApiHelper\Middlewares;
 
-use Zahzah\ApiHelper\Facades;
+use Hanafalah\ApiHelper\Facades;
 use Closure;
 
 class ApiAccess
@@ -15,7 +15,7 @@ class ApiAccess
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle($request, Closure $next)
-    { 
+    {
         /**
          * HEADER WITH TOKEN
          * - Authorization : Bearer <token>

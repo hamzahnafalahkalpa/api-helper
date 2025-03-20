@@ -1,10 +1,11 @@
 <?php
 
-namespace Zahzah\ApiHelper\Commands;
+namespace Hanafalah\ApiHelper\Commands;
 
-use Zahzah\ApiHelper\Concerns\ApiAccessPrompt;
+use Hanafalah\ApiHelper\Concerns\ApiAccessPrompt;
 
-class InstallMakeCommand extends EnvironmentCommand{
+class InstallMakeCommand extends EnvironmentCommand
+{
     use ApiAccessPrompt;
     /**
      * The name and signature of the console command.
@@ -26,7 +27,7 @@ class InstallMakeCommand extends EnvironmentCommand{
      */
     public function handle()
     {
-        $provider = 'Zahzah\ApiHelper\ApiHelperServiceProvider';
+        $provider = 'Hanafalah\ApiHelper\ApiHelperServiceProvider';
 
         $this->comment('Installing ApiHelper...');
         $this->callSilent('vendor:publish', [
@@ -41,7 +42,7 @@ class InstallMakeCommand extends EnvironmentCommand{
         ]);
 
         $this->info('✔️  Created ApiHelperServiceProvider.php');
-        
+
         $this->callSilent('vendor:publish', [
             '--provider' => $provider,
             '--tag'      => 'migrations'
@@ -57,11 +58,12 @@ class InstallMakeCommand extends EnvironmentCommand{
 
         $this->askingGenerateApiAccess();
 
-        $this->comment('zahzah/api-helper installed successfully.');
+        $this->comment('hanafalah/api-helper installed successfully.');
     }
 
-    protected function askingGenerateApiAccess(){
-        if ($this->askGenerateApiAccess()){
+    protected function askingGenerateApiAccess()
+    {
+        if ($this->askGenerateApiAccess()) {
             $this->info('✔️  Generate Key');
             $this->call('helper:generate');
             $this->info('✔️  Generated Key');

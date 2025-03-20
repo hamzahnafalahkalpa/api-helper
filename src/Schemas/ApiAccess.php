@@ -1,18 +1,20 @@
 <?php
 
-namespace Zahzah\ApiHelper\Schemas;
+namespace Hanafalah\ApiHelper\Schemas;
 
-use Zahzah\ApiHelper\Contracts\SchemaApiAccess;
-use Zahzah\ApiHelper\Supports\BaseApiAccess;
+use Hanafalah\ApiHelper\Contracts\SchemaApiAccess;
+use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 
-class ApiAccess extends BaseApiAccess implements SchemaApiAccess{
-    public function booting(): self{
+class ApiAccess extends BaseApiAccess implements SchemaApiAccess
+{
+    public function booting(): self
+    {
         static::$__class = $this;
-        static::$__model = $this->{$this->__entity."Model"}();
+        static::$__model = $this->{$this->__entity . "Model"}();
         return $this;
-}
+    }
 
-protected array $__guard   = ['id','app_code']; 
+    protected array $__guard   = ['id', 'app_code'];
     protected array $__add     = ['token'];
     protected string $__entity = 'ApiAccess';
 
@@ -25,8 +27,9 @@ protected array $__guard   = ['id','app_code'];
      *
      * @return \Illuminate\Database\Eloquent\Model The API access model.
      */
-    public function addOrChange(? array $attributes=[]): self{    
+    public function addOrChange(?array $attributes = []): self
+    {
         $this->updateOrCreate($attributes);
         return $this;
-    }   
+    }
 }

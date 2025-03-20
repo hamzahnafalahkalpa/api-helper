@@ -1,12 +1,12 @@
 <?php
 
-namespace Zahzah\ApiHelper\Facades;
+namespace Hanafalah\ApiHelper\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Zahzah\ApiHelper\Contracts\ApiHelper as ContractsApiHelper;
+use Hanafalah\ApiHelper\Contracts\ApiHelper as ContractsApiHelper;
 
 /**
- * @see \Zahzah\ApiHelper\ApiHelper
+ * @see \Hanafalah\ApiHelper\ApiHelper
  * @method static int expiration(?int $custom = null)
  * @method static void init() 
  */
@@ -18,7 +18,8 @@ class ApiHelper extends Facade
    *
    * @return string
    */
-  protected static function getFacadeAccessor() { 
+  protected static function getFacadeAccessor()
+  {
     return ContractsApiHelper::class;
   }
 }

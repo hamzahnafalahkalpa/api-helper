@@ -1,14 +1,15 @@
 <?php
 
-namespace Zahzah\ApiHelper\Validators;
+namespace Hanafalah\ApiHelper\Validators;
 
-use Zahzah\ApiHelper\{
+use Hanafalah\ApiHelper\{
     Contracts\TokenValidator,
     Supports\BaseApiAccess,
     Exceptions
 };
 
-abstract class Environment extends BaseApiAccess implements TokenValidator{
+abstract class Environment extends BaseApiAccess implements TokenValidator
+{
     abstract public function handle(): bool;
     abstract public function tokenValidator(): self;
 
@@ -22,12 +23,13 @@ abstract class Environment extends BaseApiAccess implements TokenValidator{
      * @throws Exceptions\TokenExpiredException
      * @throws Exceptions\InvalidTimestamp
      */
-    protected function timeValidator(): self{
-        if ((time() - $this->getTimestamp()) > $this->__threshold){
-          ($this->getToken() !== null)
-            ? throw new Exceptions\TokenExpiredException
-            : throw new Exceptions\InvalidTimestamp;
+    protected function timeValidator(): self
+    {
+        if ((time() - $this->getTimestamp()) > $this->__threshold) {
+            ($this->getToken() !== null)
+                ? throw new Exceptions\TokenExpiredException
+                : throw new Exceptions\InvalidTimestamp;
         }
         return $this;
-    }    
+    }
 }

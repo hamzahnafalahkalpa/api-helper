@@ -1,24 +1,28 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
-trait InitConfig{
+trait InitConfig
+{
     protected static $__api_helper_config;
     protected static $__authorize_model, $__authorizing, $__encryption;
     protected static $__initialized = false;
 
-    protected function setup(): self{
+    protected function setup(): self
+    {
         self::$__api_helper_config = config('api-helper');
         $this->authorizing();
         $this->encryption();
         return $this;
     }
 
-    private function notReady(): bool{
+    private function notReady(): bool
+    {
         return !self::$__initialized;
     }
 
-    private function initialized(): self{
+    private function initialized(): self
+    {
         self::$__initialized = true;
         return $this;
     }
@@ -28,7 +32,8 @@ trait InitConfig{
      *
      * @return string The encryption class.
      */
-    public function encryption(){
+    public function encryption()
+    {
         return self::$__encryption = self::$__api_helper_config['encryption'];
     }
 
@@ -37,7 +42,8 @@ trait InitConfig{
      *
      * @return object The authorizing instance.
      */
-    public function authorizing(): object{
+    public function authorizing(): object
+    {
         self::$__authorizing = self::$__api_helper_config['authorizing'];
         return app(self::$__authorizing);
     }
@@ -47,7 +53,8 @@ trait InitConfig{
      *
      * @return array The authorization model configuration.
      */
-    public function authorizationConfig(): array{
+    public function authorizationConfig(): array
+    {
         return self::$__authorize_model = self::$__api_helper_config['authorization_model'];
     }
 
@@ -57,7 +64,8 @@ trait InitConfig{
      * @param  string|null  $class
      * @return self
      */
-    public function setAuthorizing(? string $class = null): self{
+    public function setAuthorizing(?string $class = null): self
+    {
         if (isset($class)) config(['api-helper.authorizing' => $class]);
         $this->setup();
         return $this;

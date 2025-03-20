@@ -1,7 +1,10 @@
 <?php
 
-use Zahzah\ApiHelper\{
-    Commands, Models, Middlewares, Encryptions,
+use Hanafalah\ApiHelper\{
+    Commands,
+    Models,
+    Middlewares,
+    Encryptions,
     Validators
 };
 

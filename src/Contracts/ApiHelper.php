@@ -1,6 +1,7 @@
 <?php
 
-namespace Zahzah\ApiHelper\Contracts;
+namespace Hanafalah\ApiHelper\Contracts;
+
 use Illuminate\Http\Request as HttpRequest;
 
 interface ApiHelper

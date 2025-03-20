@@ -1,8 +1,9 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
-trait InitUser{
+trait InitUser
+{
     public static $__api_user;
 
     /**
@@ -10,7 +11,8 @@ trait InitUser{
      *
      * @return object|null The authenticated user, otherwise null.
      */
-    public function getUser(): ?object{
+    public function getUser(): ?object
+    {
         return self::$__api_user;
     }
 
@@ -22,7 +24,8 @@ trait InitUser{
      * @param  mixed  $model
      * @return $this
      */
-    public function setUser(mixed $model = null): self{
+    public function setUser(mixed $model = null): self
+    {
         if (isset($model)) $model = \is_object($model) ? $model : app($model);
         self::$__api_user = $model ?? app($this->authorizationConfig()['model']);
         return $this;
@@ -33,7 +36,8 @@ trait InitUser{
      *
      * @return object|null The authenticated user, otherwise null.
      */
-    public function user(mixed $conditionals): ?object{
+    public function user(mixed $conditionals): ?object
+    {
         return $this->setUser($this->getUser()->conditionals($conditionals)->first() ?? null);
     }
 }

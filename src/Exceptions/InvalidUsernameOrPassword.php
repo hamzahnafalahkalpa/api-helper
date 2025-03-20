@@ -1,9 +1,9 @@
 <?php
 
-namespace Zahzah\ApiHelper\Exceptions;
+namespace Hanafalah\ApiHelper\Exceptions;
 
 use Exception;
-use Zahzah\LaravelSupport\Concerns\Support\HasResponse;
+use Hanafalah\LaravelSupport\Concerns\Support\HasResponse;
 
 class InvalidUsernameOrPassword extends Exception
 {
@@ -14,7 +14,8 @@ class InvalidUsernameOrPassword extends Exception
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function render(){
+  public function render()
+  {
     return $this->sendResponse(null, 422, 'Incorrect password or username.');
   }
 }

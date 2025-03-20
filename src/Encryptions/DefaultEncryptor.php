@@ -1,7 +1,5 @@
 <?php
 
-namespace Zahzah\ApiHelper\Encryptions;
+namespace Hanafalah\ApiHelper\Encryptions;
 
-class DefaultEncryptor{
-    
-}
+class DefaultEncryptor {}

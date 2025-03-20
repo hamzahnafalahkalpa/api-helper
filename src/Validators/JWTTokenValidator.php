@@ -1,23 +1,25 @@
 <?php
 
-namespace Zahzah\ApiHelper\Validators;
+namespace Hanafalah\ApiHelper\Validators;
 
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Zahzah\ApiHelper\{
+use Hanafalah\ApiHelper\{
     Exceptions
 };
 
-class JWTTokenValidator extends Environment{
+class JWTTokenValidator extends Environment
+{
     private $auth;
 
-    public function handle(): bool{
+    public function handle(): bool
+    {
         $this->auth = $this->getDecoded();
 
-        if ($this->isForToken()){
+        if ($this->isForToken()) {
             $this->authenticate();
-        }else{
+        } else {
             $this->tokenValidator();
         }
         return true;
@@ -32,7 +34,7 @@ class JWTTokenValidator extends Environment{
             "password" => $this->auth->data->password
         ]);
         app('auth')->guard('sanctum')->authenticate();
-        return $this;        
+        return $this;
     }
 
     /**
@@ -40,20 +42,20 @@ class JWTTokenValidator extends Environment{
      *
      * @return self
      *
-     * @throws \Zahzah\ApiHelper\Exceptions\InvalidUsernameOrPassword
+     * @throws \Hanafalah\ApiHelper\Exceptions\InvalidUsernameOrPassword
      */
-    public function authenticate(): self{
-        $this->user(function($q){
+    public function authenticate(): self
+    {
+        $this->user(function ($q) {
             foreach ($this->authorizationConfig()['keys'] as $key) {
-                if (!isset($this->auth->data->{$key})) throw new Exception($key.' not found in user data');
-                $q->where($key,$this->auth->data->{$key});
+                if (!isset($this->auth->data->{$key})) throw new Exception($key . ' not found in user data');
+                $q->where($key, $this->auth->data->{$key});
             }
         });
         $validation = isset(static::$__api_user) && $this->checkingPassword();
-        $validation = $this->additionalChecking($validation);        
+        $validation = $this->additionalChecking($validation);
         if (!$validation) throw new Exceptions\InvalidUsernameOrPassword();
         return $this;
-        
     }
 
     /**
@@ -64,11 +66,12 @@ class JWTTokenValidator extends Environment{
      *
      * @return bool True if the password matches the hash, otherwise false.
      */
-    protected function checkingPassword(? string $password = null,? string $hash = null): bool{
+    protected function checkingPassword(?string $password = null, ?string $hash = null): bool
+    {
         $passName = $this->authorizationConfig()['password'];
         $password ??= $this->auth->data->{$passName};
         $hash     ??= self::$__api_user->{$passName};
-        return Hash::check($password,$hash);
+        return Hash::check($password, $hash);
     }
 
     /**
@@ -83,9 +86,10 @@ class JWTTokenValidator extends Environment{
      *
      * @return bool The validation status.
      */
-    private function additionalChecking(bool $validation): bool{
+    private function additionalChecking(bool $validation): bool
+    {
         $api_access = $this->getApiAccess();
-        if (isset($api_access->additional)){
+        if (isset($api_access->additional)) {
             foreach ($api_access->additional as $key => $value) {
                 if (!isset($this->auth->data->{$key})) throw new Exceptions\UnauthorizedAccess;
                 $validation &= $value == $this->auth->data->{$key};

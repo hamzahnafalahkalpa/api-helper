@@ -1,6 +1,6 @@
 <?php
 
-namespace Zahzah\ApiHelper\Concerns;
+namespace Hanafalah\ApiHelper\Concerns;
 
 trait HasCounter
 {
@@ -9,7 +9,8 @@ trait HasCounter
      *
      * @return self
      */
-    protected function updateCounter(): self{
+    protected function updateCounter(): self
+    {
         $total_hit = $this->getApiAccess()->total_hit ?? 0;
         $this->getApiAccess()->total_hit = $total_hit++;
         $this->getApiAccess()->save();
@@ -21,7 +22,8 @@ trait HasCounter
      *
      * @return self
      */
-    public function addCounter():self{
+    public function addCounter(): self
+    {
         $this->updateCounter();
         $this->getApiAccess()->save();
         return $this;

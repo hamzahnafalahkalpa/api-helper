@@ -1,10 +1,10 @@
 <?php
 
-namespace Zahzah\ApiHelper\Commands;
+namespace Hanafalah\ApiHelper\Commands;
 
-use Zahzah\ApiHelper\Concerns\ApiAccessPrompt;
-use Zahzah\ApiHelper\Facades\ApiAccess;
-use Zahzah\ApiHelper\Schemas\ApiAccess as SchemasApiAccess;
+use Hanafalah\ApiHelper\Concerns\ApiAccessPrompt;
+use Hanafalah\ApiHelper\Facades\ApiAccess;
+use Hanafalah\ApiHelper\Schemas\ApiAccess as SchemasApiAccess;
 use Illuminate\Support\Str;
 
 class ApiAccessMakeCommand extends EnvironmentCommand
@@ -30,16 +30,18 @@ class ApiAccessMakeCommand extends EnvironmentCommand
      * 
      * @return mixed
      */
-    public function handle(){
-       $this->generate(); 
+    public function handle()
+    {
+        $this->generate();
     }
 
-    protected function generate(){
+    protected function generate()
+    {
         $algorithm = $this->chooseAlgorithm();
         $isRsa     = $this->inArray($algorithm, ['RS256', 'RS384', 'RS512']);
         $isEdDsa   = $this->inArray($algorithm, ['ES256', 'ES384', 'ES512']);
         if ($isRsa || $isEdDsa) $this->info('Key will generate later');
-                
+
         $isHSA = $this->inArray($algorithm, ['HS256', 'HS384', 'HS512']);
         $props = [
             'algorithm'  => $algorithm,
@@ -58,9 +60,9 @@ class ApiAccessMakeCommand extends EnvironmentCommand
             ...$attributes['props']
         ];
         $apiAccess  = ApiAccess::useSchema(SchemasApiAccess::class)->add($attributes)->getModel();
-        if (isset($apiAccess)){
-            if ($isRsa || $isEdDsa){
-                $this->call('helper:generate-key',[
+        if (isset($apiAccess)) {
+            if ($isRsa || $isEdDsa) {
+                $this->call('helper:generate-key', [
                     '--app-code'         => $apiAccess->app_code,
                     '--algorithm'        => $algorithm,
                     '--reference-id'     => $this->option('reference-id'),
