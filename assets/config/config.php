@@ -44,6 +44,10 @@ return [
      * @see https://tools.ietf.org/html/rfc7518#section-3.1
      */
     'encryption_method' => 'RS256',
+    'libs' => [
+        'model' => 'Models',
+        'contract' => 'Contracts'
+    ],
     'database' => [
         'models' => [
             'ApiAccess'            => Models\ApiAccess::class,
