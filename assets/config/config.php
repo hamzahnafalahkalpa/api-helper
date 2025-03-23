@@ -46,12 +46,12 @@ return [
     'encryption_method' => 'RS256',
     'libs' => [
         'model' => 'Models',
-        'contract' => 'Contracts'
+        'contract' => 'Contracts',
+        'schema' => 'Schemas'
     ],
     'database' => [
         'models' => [
-            'ApiAccess'            => Models\ApiAccess::class,
-            'PersonalAccessToken'  => Models\PersonalAccessToken::class
+            //ADD YOUR MODELS HERE
         ]
     ]
 ];

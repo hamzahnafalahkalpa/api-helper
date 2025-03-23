@@ -3,6 +3,8 @@
 namespace Hanafalah\ApiHelper\Commands;
 
 use Hanafalah\ApiHelper\Concerns\ApiAccessPrompt;
+use Hanafalah\ApiHelper\Data\ApiAccessData;
+use Hanafalah\ApiHelper\Data\ApiAccessPropsData;
 use Hanafalah\ApiHelper\Facades\ApiAccess;
 use Hanafalah\ApiHelper\Schemas\ApiAccess as SchemasApiAccess;
 use Illuminate\Support\Str;
@@ -37,7 +39,7 @@ class ApiAccessMakeCommand extends EnvironmentCommand
 
     protected function generate()
     {
-        $algorithm = $this->chooseAlgorithm();
+        $algorithm = $this->chooseAlgorithm($this->option('algorithm') ?? null);
         $isRsa     = $this->inArray($algorithm, ['RS256', 'RS384', 'RS512']);
         $isEdDsa   = $this->inArray($algorithm, ['ES256', 'ES384', 'ES512']);
         if ($isRsa || $isEdDsa) $this->info('Key will generate later');
@@ -51,15 +53,28 @@ class ApiAccessMakeCommand extends EnvironmentCommand
             $props['secret'] = Str::random(32);
         }
 
-        $attributes = [
-            'app_code'   => $this->askAppCode(),
-            ...$this->askOtherProperties()
-        ];
+        $appCodeOption = $this->option('app-code');
+        if (isset($appCodeOption)) {
+            $attributes = [
+                'app_code' => $appCodeOption,
+            ];
+        } else {
+            $attributes = [
+                'app_code' => $this->askAppCode(),
+                ...$this->askOtherProperties()
+            ];
+        }
+
         $attributes['props'] = [
             ...$props,
-            ...$attributes['props']
+            ...$attributes['props'] ?? []
         ];
-        $apiAccess  = ApiAccess::useSchema(SchemasApiAccess::class)->add($attributes)->getModel();
+        $apiAccess = app(config('app.contracts.ApiAccess'))->prepareStoreApiAccess(ApiAccessData::from([
+            'app_code'       => $attributes['app_code'],
+            'reference_type' => $this->option('reference-type'),
+            'reference_id'   => $this->option('reference-id'),
+            'props'          => ApiAccessPropsData::from($attributes['props']),
+        ]));
         if (isset($apiAccess)) {
             if ($isRsa || $isEdDsa) {
                 $this->call('helper:generate-key', [
@@ -68,9 +83,6 @@ class ApiAccessMakeCommand extends EnvironmentCommand
                     '--reference-id'     => $this->option('reference-id'),
                     '--reference-type'   => $this->option('reference-type'),
                 ]);
-                // $this->askGeneratePublicKey();
-                // if ($this->getAskGeneratePublicKeyResult()){
-                // }
             }
         }
     }

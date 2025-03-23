@@ -14,11 +14,7 @@ class ApiAccess extends SupportBaseModel
   protected $table = "api_accesses";
 
   protected $fillable = [
-    'id',
-    'app_code',
-    'reference_id',
-    'reference_type',
-    'token'
+    'id','app_code','reference_id','reference_type','token','props'
   ];
 
   /**

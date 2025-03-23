@@ -18,11 +18,7 @@ class ApiHelperServiceProvider extends BaseServiceProvider
                 '*',
                 'Services' => function () {
                     $this->binds([
-                        Contracts\ApiHelper::class => new ApiHelper(),
-                        Contracts\ApiAccess::class => function ($app) {
-                            return ApiAccess::class;
-                        },
-                        Schemas\ApiAccess::class => new SchemaApiAccess
+                        Contracts\ApiHelper::class => ApiHelper::class
                     ]);
                 }
             ]);
