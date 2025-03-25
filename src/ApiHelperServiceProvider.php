@@ -13,15 +13,16 @@ class ApiHelperServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->registerMainClass(ApiHelper::class)
-            ->registerCommandService(Providers\CommandServiceProvider::class)
-            ->registers([
-                '*',
-                'Services' => function () {
-                    $this->binds([
-                        Contracts\ApiHelper::class => ApiHelper::class
-                    ]);
-                }
-            ]);
+                ->registerCommandService(Providers\CommandServiceProvider::class)
+                ->registers([
+                    '*',
+                    'Services' => function () {
+                        $this->binds([
+                            Contracts\ModuleApiAccess::class => ApiAccess::class,
+                            Contracts\ApiHelper::class => ApiHelper::class
+                        ]);
+                    }
+                ]);
     }
 
     /**
