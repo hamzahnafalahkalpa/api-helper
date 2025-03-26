@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanafalah\ApiHelper\Contracts;
+namespace Hanafalah\ApiHelper\Contracts\Validators;
 
 interface TokenValidator
 {

@@ -18,8 +18,8 @@ class ApiHelperServiceProvider extends BaseServiceProvider
                     '*',
                     'Services' => function () {
                         $this->binds([
-                            Contracts\ModuleApiAccess::class => ApiAccess::class,
-                            Contracts\ApiHelper::class => ApiHelper::class
+                            Contracts\Encryptions\EncryptorInterface::class => Encryptions\Environment::class,
+                            Contracts\Validators\TokenValidator::class => Validators\Environment::class
                         ]);
                     }
                 ]);

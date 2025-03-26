@@ -2,7 +2,7 @@
 
 namespace Hanafalah\ApiHelper\Schemas;
 
-use Hanafalah\ApiHelper\Contracts\ApiAccess as ContractsApiAccess;
+use Hanafalah\ApiHelper\Contracts\Schemas\ApiAccess as ContractsApiAccess;
 use Hanafalah\ApiHelper\Data\ApiAccessData;
 use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 use Illuminate\Database\Eloquent\Builder;
