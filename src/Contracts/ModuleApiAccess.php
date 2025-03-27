@@ -2,7 +2,7 @@
 
 namespace Hanafalah\ApiHelper\Contracts;
 
-interface ApiAccess
+interface ModuleApiAccess
 {
     public function __construct();
     // public function getModelCode();
