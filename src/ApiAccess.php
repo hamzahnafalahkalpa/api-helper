@@ -4,7 +4,7 @@ namespace Hanafalah\ApiHelper;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Hanafalah\ApiHelper\Contracts\ApiAccess as ContractsApiAccess;
+use Hanafalah\ApiHelper\Contracts\ModuleApiAccess as ContractsApiAccess;
 use Hanafalah\ApiHelper\Schemas\Token;
 use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 

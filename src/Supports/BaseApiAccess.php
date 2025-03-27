@@ -11,7 +11,7 @@ use Hanafalah\LaravelSupport\Concerns\{
     DatabaseConfiguration as DatabaseConcernSupport
 };
 use Hanafalah\LaravelSupport\Concerns\Support\ErrorHandling;
-use Hanafalah\LaravelSupport\Contracts\DataManagement;
+use Hanafalah\LaravelSupport\Contracts\Supports\DataManagement;
 use Hanafalah\LaravelSupport\Supports\PackageManagement;
 
 

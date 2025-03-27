@@ -2,7 +2,7 @@
 
 namespace Hanafalah\ApiHelper\Facades;
 
-use Hanafalah\ApiHelper\Contracts\ApiAccess as ContractApiAccess;
+use Hanafalah\ApiHelper\Contracts\ModuleApiAccess as ContractApiAccess;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -44,6 +44,6 @@ class ApiAccess extends Facade
 {
    protected static function getFacadeAccessor()
    {
-      return app(ContractApiAccess::class);
+      return ContractApiAccess::class;
    }
 }

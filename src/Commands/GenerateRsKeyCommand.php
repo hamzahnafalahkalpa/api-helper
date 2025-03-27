@@ -67,12 +67,12 @@ class GenerateRsKeyCommand extends EnvironmentCommand
                 openssl_pkey_export($key, $privateKey);
                 $details   = openssl_pkey_get_details($key);
                 $publicKey = $details['key'];
-                break;
+            break;
             case 'ES':
                 $keyPair    = sodium_crypto_sign_keypair();
                 $privateKey = base64_encode(sodium_crypto_sign_secretkey($keyPair));
                 $publicKey  = base64_encode(sodium_crypto_sign_publickey($keyPair));
-                break;
+            break;
         }
         $this->info("Private Key:\n" . $privateKey);
         $this->info("Public Key:\n" . $publicKey);

@@ -3,7 +3,7 @@
 namespace Hanafalah\ApiHelper\Validators;
 
 use Hanafalah\ApiHelper\{
-    Contracts\TokenValidator,
+    Contracts\Validators\TokenValidator,
     Supports\BaseApiAccess,
     Exceptions
 };

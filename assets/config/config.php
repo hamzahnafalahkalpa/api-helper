@@ -44,10 +44,14 @@ return [
      * @see https://tools.ietf.org/html/rfc7518#section-3.1
      */
     'encryption_method' => 'RS256',
+    'libs' => [
+        'model' => 'Models',
+        'contract' => 'Contracts',
+        'schema' => 'Schemas'
+    ],
     'database' => [
         'models' => [
-            'ApiAccess'            => Models\ApiAccess::class,
-            'PersonalAccessToken'  => Models\PersonalAccessToken::class
+            //ADD YOUR MODELS HERE
         ]
     ]
 ];
