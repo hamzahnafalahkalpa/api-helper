@@ -7,7 +7,7 @@ use Firebase\JWT\{
     Key
 };
 use Hanafalah\ApiHelper\{
-    Contracts\EncryptorInterface,
+    Contracts\Encryptions\EncryptorInterface,
     Facades\ApiAccess
 };
 use Ramsey\Uuid\Uuid;

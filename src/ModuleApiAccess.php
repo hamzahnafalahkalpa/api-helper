@@ -8,7 +8,7 @@ use Hanafalah\ApiHelper\Contracts\ModuleApiAccess as ContractsApiAccess;
 use Hanafalah\ApiHelper\Schemas\Token;
 use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 
-class ApiAccess extends BaseApiAccess implements ContractsApiAccess
+class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
 {
   public int $__expiration, $__expiration_config;
 

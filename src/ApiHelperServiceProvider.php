@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hanafalah\ApiHelper;
 
 use Laravel\Sanctum\Sanctum;
-use Hanafalah\ApiHelper\Schemas\ApiAccess as SchemaApiAccess;
 use Hanafalah\LaravelSupport\Providers\BaseServiceProvider;
 
 class ApiHelperServiceProvider extends BaseServiceProvider
