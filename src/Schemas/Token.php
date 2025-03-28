@@ -20,17 +20,17 @@ class Token extends BaseApiAccess
         $this->data = $this->authorizing()->handle();
     }
 
-    public function handle(): mixed
+    public function handle()
     {
         if ($this->isForToken()) {
             $this->getUser()->token()->where([
                 'name'           => $this->__token_access_name,
                 'device_id'      => $_SERVER['HTTP_DEVICE_ID'] ?? null
             ])->delete();
-
+            
             return $this->encrypting(self::$__decode_result->data);
         }
-
+            
         if ($this->isForAuthenticate()) {
             if (request()->headers->has('Authorization')) {
                 $decoded    = $this->getDecoded();
