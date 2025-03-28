@@ -5,7 +5,7 @@ namespace Hanafalah\ApiHelper\Encryptions;
 use Hanafalah\ApiHelper\{
     Concerns\AlgorithmRS,
     Concerns\AlgorithmHS,
-    Contracts\EncryptorInterface,
+    Contracts\Encryptions\EncryptorInterface,
     Supports\BaseApiAccess
 };
 use Hanafalah\LaravelSupport\Concerns\Support\HasArray;

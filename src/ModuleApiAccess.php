@@ -35,11 +35,10 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
       ? explode('|', $authorization)[1]
       : $authorization;
     //IF REQUEST HAS TOKEN
-
     switch (true) {
       case $this->hasAppCode():
         $this->initByAppCode();
-        break;
+      break;
       case $this->hasToken():
         $this->initByToken();
         break;
@@ -66,11 +65,11 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
    * 
    * @return self
    */
-  public function accessOnLogin(callable $callback): self
+  public function accessOnLogin(?callable $callback = null): self
   {
     if (isset(self::$__decode_result->aud)) {
       $validation = $this->forAuthenticate()->useSchema(Token::class)->getClass()->handle();
-      if ($validation) {
+      if ($validation && isset($callback)) {
         $callback($this);
       }
     }

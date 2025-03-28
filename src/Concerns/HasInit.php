@@ -3,6 +3,7 @@
 namespace Hanafalah\ApiHelper\Concerns;
 
 use Hanafalah\ApiHelper\Exceptions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 trait HasInit
