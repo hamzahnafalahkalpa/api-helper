@@ -23,8 +23,8 @@
         "firebase/php-jwt": "^6.10",
         "paragonie/sodium_compat": "^2.1",
         "phpseclib/phpseclib": "^3.0",
-        "hanafalah/laravel-support": "1.x",
-        "hanafalah/laravel-has-props": "1.x"
+        "hanafalah/laravel-support": "dev-main",
+        "hanafalah/laravel-has-props": "dev-main"
     },
     "minimum-stability": "dev",
     "prefer-stable": false
