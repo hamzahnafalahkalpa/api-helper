@@ -18,7 +18,7 @@ class ApiAccessMakeCommand extends EnvironmentCommand
      *
      * @var string
      */
-    protected $signature = 'helper:generate {--app-code=} {--algorithm=} {--reference-id=} {--reference-type=}';
+    protected $signature = 'helper:generate {--app-code=} {--algorithm=} {--reference-id=} {--reference-type=} {--secret=}';
 
     /**
      * The console command description.
@@ -50,7 +50,7 @@ class ApiAccessMakeCommand extends EnvironmentCommand
         ];
         if ($isHSA) {
             $this->info('Secret key generated');
-            $props['secret'] = Str::random(32);
+            $props['secret'] = $this->option('secret') ?? Str::random(32);
         }
 
         $appCodeOption = $this->option('app-code');
@@ -81,7 +81,7 @@ class ApiAccessMakeCommand extends EnvironmentCommand
                     '--app-code'         => $apiAccess->app_code,
                     '--algorithm'        => $algorithm,
                     '--reference-id'     => $this->option('reference-id'),
-                    '--reference-type'   => $this->option('reference-type'),
+                    '--reference-type'   => $this->option('reference-type')
                 ]);
             }
         }
