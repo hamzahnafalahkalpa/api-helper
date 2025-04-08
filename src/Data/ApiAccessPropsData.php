@@ -7,17 +7,15 @@ use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapName;
 
 class ApiAccessPropsData extends Data{
-    public function __construct(
-        #[MapInputName('algorithm')]
-        #[MapName('algorithm')]
-        public string $algorithm,
+    #[MapInputName('algorithm')]
+    #[MapName('algorithm')]
+    public string $algorithm;
 
-        #[MapInputName('secret')]
-        #[MapName('secret')]
-        public ?string $secret = null,
+    #[MapInputName('secret')]
+    #[MapName('secret')]
+    public ?string $secret = null;
 
-        #[MapInputName('additional')]
-        #[MapName('additional')]
-        public array $additional = [],
-    ){}
+    #[MapInputName('additional')]
+    #[MapName('additional')]
+    public array $additional = [];
 }
