@@ -50,12 +50,6 @@ class InstallMakeCommand extends EnvironmentCommand
 
         $this->info('✔️  Created migrations');
 
-        $migrations = $this->setMigrationBasePath(database_path('migrations'))->canMigrate();
-        $this->callSilent('migrate', [
-            '--path' => $migrations
-        ]);
-        $this->info('✔️  Helper tables migrated');
-
         $this->askingGenerateApiAccess();
 
         $this->comment('hanafalah/api-helper installed successfully.');
