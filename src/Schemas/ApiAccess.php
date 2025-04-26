@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ApiAccess extends BaseApiAccess implements ContractsApiAccess
 {
-    protected array $__guard   = ['id', 'app_code'];
-    protected array $__add     = ['token'];
     protected string $__entity = 'ApiAccess';
     public static $api_access_model;
 
