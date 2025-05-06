@@ -4,10 +4,10 @@ namespace Hanafalah\ApiHelper\Models;
 
 use Illuminate\Support\Facades\Hash;
 use Hanafalah\LaravelHasProps\Concerns\HasProps;
+use Hanafalah\LaravelSupport\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Hanafalah\LaravelSupport\Models\SupportBaseModel;
 
-class ApiAccess extends SupportBaseModel
+class ApiAccess extends BaseModel
 {
   use SoftDeletes, HasProps;
 
