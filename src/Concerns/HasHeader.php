@@ -70,7 +70,7 @@ trait HasHeader
         return $this->hasHeader('AppCode');
     }
 
-    public function hasToken(): bool
+    protected function hasToken(): bool
     {
         return $this->hasHeader('Authorization');
     }

@@ -23,13 +23,13 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
    * @throws \Exceptions\UnauthorizedAccess
    * @return self
    */
-  public function init(): self
+  public function init(? string $authorization = null): self
   {
     $this->setCollectHeader();
     if (!request()->hasHeader('Authorization')) throw new Exceptions\UnauthorizedAccess;
     $this->__expiration_config = config('api-helper.expiration');
     $this->expiration();
-    $authorization        = Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
+    $authorization    ??= Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
     if ($authorization == 'null') throw new Exceptions\UnauthorizedAccess;
     self::$__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
     $this->__authorization = is_numeric(Str::position($authorization, '|'))
@@ -61,8 +61,8 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
    */
   public function accessOnLogin(?callable $callback = null): self
   {
-    if (isset(self::$__decode_result->aud)) {
-      $validation = $this->forAuthenticate()->useSchema(Token::class)->getClass()->handle();
+    if (isset(self::$__decode_result->aud)){
+      $validation = $this->forAuthenticate()->schemaContract('Token')->handle();
       if ($validation && isset($callback)) $callback($this);
     }
     return $this;

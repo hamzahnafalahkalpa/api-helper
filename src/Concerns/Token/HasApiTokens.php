@@ -2,7 +2,6 @@
 
 namespace Hanafalah\ApiHelper\Concerns\Token;
 
-use DateTimeInterface;
 use Laravel\Sanctum\HasApiTokens as SanctumHasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
 
@@ -10,27 +9,35 @@ trait HasApiTokens
 {
     use SanctumHasApiTokens;
 
-    /**
-     * Create a new personal access token for the user.
-     *
-     * @param  string  $name
-     * @param  array  $abilities
-     * @param  \DateTimeInterface|null  $expiresAt
-     * @return \Laravel\Sanctum\NewAccessToken
-     */
-    public function createToken(string $name, array $abilities = ['*'], DateTimeInterface $expiresAt = null)
-    {
+    protected string $__app_code;
+
+    public function setAppCode(string $app_code): self{
+        $this->__app_code = $app_code;
+        return $this;
+    }
+
+    // /**
+    //  * Create a new personal access token for the user.
+    //  *
+    //  * @param  string  $name
+    //  * @param  array  $abilities
+    //  * @param  \DateTimeInterface|null  $expiresAt
+    //  * @return \Laravel\Sanctum\NewAccessToken
+    //  */
+    // public function createToken(string $name, array $abilities = ['*'], ?DateTimeInterface $expiresAt = null)
+    // {
         // $time = time();
         // $data = [];
+        
         // $auth_model = config('api-helper.authorization_model');
-        // if (!$auth_model['model'] instanceof self) throw new Exception("Model of `authorization_model` on `api-helper` config is not same with this model", 1);
+        // if ($auth_model['model'] !== $this::class) throw new \Exception("Model of `authorization_model` on `api-helper` config is not same with this model", 1);
 
         // foreach ($auth_model['keys'] as $column) $data[$column] = $this->{$column};
 
-        // $api_access = ApiAccess::forToken()->setAppCode();
+        // $api_access = ApiAccess::forToken()->setAppCode($this->__app_code ?? null);
         // $token = $api_access->encrypting($data);
         // return $this->setToken($name, $token, $abilities, $expiresAt);
-    }
+    // }
 
     public function setToken(string $name, array $data, array $abilities = ['*'], $expiresAt = null): NewAccessToken
     {

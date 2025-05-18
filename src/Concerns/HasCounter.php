@@ -22,7 +22,7 @@ trait HasCounter
      *
      * @return self
      */
-    public function addCounter(): self
+    protected function addCounter(): self
     {
         $this->updateCounter();
         $this->getApiAccess()->save();

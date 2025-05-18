@@ -57,17 +57,17 @@ class JWTEncryptor extends Environment implements EncryptorInterface
             case 'RS384':
             case 'RS512':
                 $result = $this->setRsKeys()->processRS();
-                break;
+            break;
             case 'ES256':
             case 'ES384':
             case 'ES512':
                 $result = $this->setEsKeys()->processES();
-                break;
+            break;
             case 'HS256':
             case 'HS384':
             case 'HS512':
                 $result = $this->setSecretKey()->processHS();
-                break;
+            break;
         }
         return $result;
     }
