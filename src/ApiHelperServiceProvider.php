@@ -31,7 +31,11 @@ class ApiHelperServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        Sanctum::usePersonalAccessTokenModel($this->PersonalAccessTokenModelInstance());
+        $this->app->booted(function(){
+            Sanctum::usePersonalAccessTokenModel($this->PersonalAccessTokenModelInstance());
+
+            config(['sanctum.expiration' => config('api-helper.expiration')]);
+        });
     }
 
     /**
