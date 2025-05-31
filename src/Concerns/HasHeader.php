@@ -67,12 +67,12 @@ trait HasHeader
      */
     protected function hasAppCode(): bool
     {
-        return $this->hasHeader('AppCode');
+        return $this->hasHeader('AppCode') || request()->AppCode;
     }
 
     protected function hasToken(): bool
     {
-        return $this->hasHeader('Authorization');
+        return $this->hasHeader('Authorization') || request()->Authorization;
     }
 
     /**

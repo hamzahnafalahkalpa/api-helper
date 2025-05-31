@@ -81,7 +81,8 @@ class JWTEncryptor extends Environment implements EncryptorInterface
     {
         $payload ??= self::$__payload;
         $time = time();
-        $exp  = $time + ApiAccess::expiration();
+        $api_access_expiration = ApiAccess::expiration();
+        $exp  = isset($api_access_expiration) ? $time + $api_access_expiration : null;
         $jti  = Uuid::uuid4()->toString();
         $this->__jwt_payload = $this->mergeArray($this->__jwt_payload, [
             'iss'  => $_SERVER['HTTP_REFERER'] ?? null,

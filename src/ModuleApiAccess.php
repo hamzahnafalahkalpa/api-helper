@@ -10,7 +10,8 @@ use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 
 class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
 {
-  public int $__expiration, $__expiration_config;
+  public int $__expiration;
+  public ?int $__expiration_config;
 
   /**
    * Initialize the API access by given request headers.
@@ -26,15 +27,18 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
   public function init(? string $authorization = null): self
   {
     $this->setCollectHeader();
-    if (!request()->hasHeader('Authorization')) throw new Exceptions\UnauthorizedAccess;
+    if (!request()->hasHeader('Authorization') && !isset($authorization)) throw new Exceptions\UnauthorizedAccess;
     $this->__expiration_config = config('api-helper.expiration');
     $this->expiration();
-    $authorization    ??= Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
     if ($authorization == 'null') throw new Exceptions\UnauthorizedAccess;
-    self::$__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
-    $this->__authorization = is_numeric(Str::position($authorization, '|'))
-      ? explode('|', $authorization)[1]
-      : $authorization;
+
+    $authorization    ??= Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
+    if (is_numeric(Str::position($authorization, '|'))){
+      self::$__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
+      $this->__authorization = explode('|', $authorization)[1];
+    }else{
+      $this->__authorization = $authorization;
+    }
     //IF REQUEST HAS TOKEN
     switch (true) {
       case $this->hasAppCode() : $this->initByAppCode();break;

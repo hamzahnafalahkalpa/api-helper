@@ -2,6 +2,25 @@
 
 namespace Hanafalah\ApiHelper\Contracts\Schemas;
 
+use Hanafalah\ApiHelper\Data\ApiAccessData;
 use Hanafalah\LaravelSupport\Contracts\Supports\DataManagement;
+use Illuminate\Database\Eloquent\Model;
 
-interface ApiAccess extends DataManagement {}
+/**
+ * @see \Hanafalah\ApiHelper\Schemas\ApiAccess
+ * @method self conditionals(mixed $conditionals)
+ * @method bool deleteApiAccess()
+ * @method bool prepareDeleteApiAccess(? array $attributes = null)
+ * @method mixed getApiAccess()
+ * @method ?Model prepareShowApiAccess(?Model $model = null, ?array $attributes = null)
+ * @method array showApiAccess(?Model $model = null)
+ * @method Collection prepareViewApiAccessList()
+ * @method array viewApiAccessList()
+ * @method LengthAwarePaginator prepareViewApiAccessPaginate(PaginateData $paginate_dto)
+ * @method array viewApiAccessPaginate(?PaginateData $paginate_dto = null)
+ * @method array storeApiAccess(?ApiAccessData $api_access_dto = null)
+ * @method Builder apiAccess(mixed $conditionals = null)
+ */
+interface ApiAccess extends DataManagement {
+    public function prepareStoreApiAccess(ApiAccessData $api_access_dto): Model;
+}

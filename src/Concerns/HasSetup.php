@@ -84,7 +84,7 @@ trait HasSetup
      */
     public function setAppCode(?string $app_code = null): self
     {
-        static::$__app_code = $app_code ?? request()->header('AppCode') ?? static::$__api_access->app_code;
+        static::$__app_code = $app_code ?? request()->header('AppCode') ?? request()->AppCode ?? static::$__api_access->app_code;
         return $this;
     }
 

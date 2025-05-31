@@ -17,6 +17,14 @@ class ApiAccess extends BaseModel
     'id','app_code','reference_id','reference_type','token','props'
   ];
 
+  public function viewUsingRelation(): array{
+    return [];
+  }
+
+  public function showUsingRelation(): array{
+    return ['reference'];
+  }
+
   public function setPasswordAttribute($value){$this->attributes['password'] = Hash::make($value);}
   public function scopeFindToken($builder, $token){return $builder->where('token', $token);}
   public function scopeFindAppCode($builder, $app_code){return $builder->where('app_code', $app_code);}
