@@ -4,6 +4,7 @@ namespace Hanafalah\ApiHelper\Middlewares;
 
 use Hanafalah\ApiHelper\Facades;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class ApiAccess
 {
@@ -16,16 +17,9 @@ class ApiAccess
      */
     public function handle($request, Closure $next)
     {
-        /**
-         * HEADER WITH TOKEN
-         * - Authorization : Bearer <token>
-         * - AppCode       : <app_code>
-         * 
-         * HEADER WITHOUT TOKEN 
-         * - Authorization : Bearer <username dan password> ketika generate token
-         * - AppCode   : <app_code> 
-         */
-        Facades\ApiAccess::init();
+        Facades\ApiAccess::init()->accessOnLogin(function ($api_access) {
+            
+        });
         return $next($request);
     }
 }

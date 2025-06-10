@@ -23,31 +23,24 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
    * @throws \Exceptions\UnauthorizedAccess
    * @return self
    */
-  public function init(): self
+  public function init(? string $authorization = null): self
   {
     $this->setCollectHeader();
     if (!request()->hasHeader('Authorization')) throw new Exceptions\UnauthorizedAccess;
     $this->__expiration_config = config('api-helper.expiration');
     $this->expiration();
-    $authorization        = Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
+    $authorization    ??= Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
     if ($authorization == 'null') throw new Exceptions\UnauthorizedAccess;
-    self::$__access_token = $this->PersonalAccessTokenModel()->findToken($authorization);
+    self::$__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
     $this->__authorization = is_numeric(Str::position($authorization, '|'))
       ? explode('|', $authorization)[1]
       : $authorization;
     //IF REQUEST HAS TOKEN
     switch (true) {
-      case $this->hasAppCode():
-        $this->initByAppCode();
-      break;
-      case $this->hasToken():
-        $this->initByToken();
-        break;
-      case $this->hasUsername():
-        $this->initByUsername();
-        break;
-      default:
-        throw new Exceptions\UnauthorizedAccess;
+      case $this->hasAppCode() : $this->initByAppCode();break;
+      case $this->hasToken()   : $this->initByToken();break;
+      case $this->hasUsername(): $this->initByUsername();break;
+      default: throw new Exceptions\UnauthorizedAccess;
     }
     return $this;
   }
@@ -68,11 +61,9 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
    */
   public function accessOnLogin(?callable $callback = null): self
   {
-    if (isset(self::$__decode_result->aud)) {
-      $validation = $this->forAuthenticate()->useSchema(Token::class)->getClass()->handle();
-      if ($validation && isset($callback)) {
-        $callback($this);
-      }
+    if (isset(self::$__decode_result->aud)){
+      $validation = $this->forAuthenticate()->schemaContract('Token')->handle();
+      if ($validation && isset($callback)) $callback($this);
     }
     return $this;
   }

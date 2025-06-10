@@ -12,7 +12,7 @@ class InstallMakeCommand extends EnvironmentCommand
      *
      * @var string
      */
-    protected $signature = 'helper:install';
+    protected $signature = 'helper:install {--skip-generate}';
 
 
     /**
@@ -50,13 +50,7 @@ class InstallMakeCommand extends EnvironmentCommand
 
         $this->info('✔️  Created migrations');
 
-        $migrations = $this->setMigrationBasePath(database_path('migrations'))->canMigrate();
-        $this->callSilent('migrate', [
-            '--path' => $migrations
-        ]);
-        $this->info('✔️  Helper tables migrated');
-
-        $this->askingGenerateApiAccess();
+        if (!$this->option('skip-generate')) $this->askingGenerateApiAccess();
 
         $this->comment('hanafalah/api-helper installed successfully.');
     }

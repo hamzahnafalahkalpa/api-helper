@@ -9,7 +9,7 @@ trait ApiAccessPrompt
 {
     protected $__ask_generate_public_key, $__ask_generate_api_access;
 
-    public function askAppCode()
+    protected function askAppCode()
     {
         return $this->option('app-code')   ?: $this->ask('Enter app code ?');
     }

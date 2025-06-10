@@ -2,15 +2,13 @@
 
 namespace Hanafalah\ApiHelper\Schemas;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Ramsey\Uuid\Uuid;
 use Hanafalah\ApiHelper\{
-    Supports\BaseApiAccess
+    Supports\BaseApiAccess,
+    Contracts\Schemas\Token as TokenInterface
 };
 use Hanafalah\ApiHelper\Exceptions\UnauthorizedAccess;
-use Hanafalah\MicroTenant\Models\User\User;
 
-class Token extends BaseApiAccess
+class Token extends BaseApiAccess implements TokenInterface
 {
     protected $data;
 
@@ -30,7 +28,6 @@ class Token extends BaseApiAccess
             
             return $this->encrypting(self::$__decode_result->data);
         }
-            
         if ($this->isForAuthenticate()) {
             if (request()->headers->has('Authorization')) {
                 $decoded    = $this->getDecoded();

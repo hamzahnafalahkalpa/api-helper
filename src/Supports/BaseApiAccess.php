@@ -6,6 +6,7 @@ use Hanafalah\ApiHelper\{
     Exceptions,
     Concerns
 };
+use Hanafalah\ApiHelper\Contracts\Supports\BaseApiAccess as SupportsBaseApiAccess;
 use Hanafalah\LaravelSupport\Concerns\{
     Support as ConcernSupport,
     DatabaseConfiguration as DatabaseConcernSupport
@@ -15,7 +16,7 @@ use Hanafalah\LaravelSupport\Contracts\Supports\DataManagement;
 use Hanafalah\LaravelSupport\Supports\PackageManagement;
 
 
-class BaseApiAccess extends PackageManagement
+class BaseApiAccess extends PackageManagement implements DataManagement, SupportsBaseApiAccess
 {
     use Concerns\HasHeader,
         Concerns\HasEncryptor,
@@ -43,7 +44,7 @@ class BaseApiAccess extends PackageManagement
     protected $__threshold = 1800;
 
 
-    public function __construct(...$args)
+    public function __construct()
     {
         if ($this->notReady()) {
             $this->initialized();

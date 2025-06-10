@@ -26,7 +26,9 @@ class JWTTokenValidator extends Environment
 
     public function tokenValidator(): self
     {
-        $this->setTimestamp($this->auth->exp)->timeValidator();
+        if (isset($this->auth?->exp)){
+            $this->setTimestamp($this->auth->exp)->timeValidator();
+        }
         //INIT KE SANCTUM AUTH
         if (!Auth::check()){
             Auth::attempt([
@@ -34,7 +36,7 @@ class JWTTokenValidator extends Environment
                 "password" => $this->auth->data->password
             ]);
         }
-        app('auth')->guard('sanctum')->authenticate();
+        // app('auth')->guard('sanctum')->authenticate();
         return $this;
     }
 
