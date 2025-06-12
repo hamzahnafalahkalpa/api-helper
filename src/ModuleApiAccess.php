@@ -10,7 +10,7 @@ use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 
 class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
 {
-  public int $__expiration, $__expiration_config;
+  public ?int $__expiration, $__expiration_config;
 
   /**
    * Initialize the API access by given request headers.
