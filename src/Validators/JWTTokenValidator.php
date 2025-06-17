@@ -26,9 +26,9 @@ class JWTTokenValidator extends Environment
 
     public function tokenValidator(): self
     {
-        if (isset($this->auth?->exp)){
-            $this->setTimestamp($this->auth->exp)->timeValidator();
-        }
+        // if (isset($this->auth?->exp)){
+        //     $this->setTimestamp($this->auth->exp)->timeValidator();
+        // }
         //INIT KE SANCTUM AUTH
         if (!Auth::check()){
             Auth::attempt([
