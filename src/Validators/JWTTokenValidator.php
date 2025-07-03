@@ -31,10 +31,16 @@ class JWTTokenValidator extends Environment
         // }
         //INIT KE SANCTUM AUTH
         if (!Auth::check()){
-            Auth::attempt([
-                "username" => $this->auth->data->username,
-                "password" => $this->auth->data->password
-            ]);
+            if (isset($this->auth->data->id)){
+                $user = $this->UserModel()->findOrFail($this->auth->data->id);
+                Auth::user($user);
+            }else{
+                Auth::attempt([
+                    "username" => $this->auth->data->username,
+                    "password" => $this->auth->data->password
+                ]);
+            }
+
         }
         // app('auth')->guard('sanctum')->authenticate();
         return $this;

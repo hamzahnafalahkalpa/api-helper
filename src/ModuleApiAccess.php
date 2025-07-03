@@ -62,7 +62,7 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
   public function accessOnLogin(?callable $callback = null): self
   {
     if (isset(self::$__decode_result->aud)){
-      $validation = $this->forAuthenticate()->schemaContract('Token')->handle();
+      $validation = $this->forAuthenticate()->schemaContract(config('api-helper.validation'))->handle();
       if ($validation && isset($callback)) $callback($this);
     }
     return $this;
