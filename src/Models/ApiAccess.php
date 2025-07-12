@@ -5,12 +5,16 @@ namespace Hanafalah\ApiHelper\Models;
 use Illuminate\Support\Facades\Hash;
 use Hanafalah\LaravelHasProps\Concerns\HasProps;
 use Hanafalah\LaravelSupport\Models\BaseModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ApiAccess extends BaseModel
 {
-  use SoftDeletes, HasProps;
+  use SoftDeletes, HasProps, HasUlids;
 
+  public $incrementing = false;
+  protected $keyType = 'string';
+  protected $primaryKey = 'id';
   protected $table = "api_accesses";
 
   protected $fillable = [
@@ -21,6 +25,5 @@ class ApiAccess extends BaseModel
   public function scopeFindToken($builder, $token){return $builder->where('token', $token);}
   public function scopeFindAppCode($builder, $app_code){return $builder->where('app_code', $app_code);}
   public function scopeFindUsername($builder, $username){return $builder->where('username', $username);}
-
   public function reference(){return $this->morphTo();}
 }
