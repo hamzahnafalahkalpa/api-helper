@@ -29,6 +29,7 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
     if (!request()->hasHeader('Authorization')) throw new Exceptions\UnauthorizedAccess;
     $this->__expiration_config = config('api-helper.expiration');
     $this->expiration();
+
     $authorization    ??= Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
     if ($authorization == 'null') throw new Exceptions\UnauthorizedAccess;
     self::$__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
