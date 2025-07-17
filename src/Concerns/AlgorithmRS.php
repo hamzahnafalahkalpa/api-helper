@@ -30,7 +30,7 @@ trait AlgorithmRS
      * @param string $key The public key to be used.
      * @return self The current instance after setting the public key.
      */
-    protected function setPublicKey(string $key = null): self
+    protected function setPublicKey(?string $key = null): self
     {
         $this->__public_key = $key ?? $this->getApiAccess()->public_key;
         return $this;
@@ -45,7 +45,7 @@ trait AlgorithmRS
      * @param string $key The private key to be used.
      * @return self The current instance after setting the private key.
      */
-    protected function setPrivateKey(string $key = null): self
+    protected function setPrivateKey(?string $key = null): self
     {
         $this->__private_key = $key ?? $this->getApiAccess()->private_key;
         return $this;

@@ -162,7 +162,7 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      *
      * @return self
      */
-    public function setExpirationToken(mixed $expiration): self
+    public function setExpirationToken(mixed $expiration = null): self
     {
         self::$__generated_token['expires_at'] = $expiration;
         return $this;
