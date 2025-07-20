@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class ApiAccess extends BaseApiAccess implements ContractsApiAccess
 {
     protected string $__entity = 'ApiAccess';
-    public static $api_access_model;
+    public $api_access_model;
 
     public function prepareStoreApiAccess(ApiAccessData $api_access_dto): Model{
         if (isset($api_access_dto->id)){
@@ -27,6 +27,6 @@ class ApiAccess extends BaseApiAccess implements ContractsApiAccess
             $api_access->{$key} = $value;
         }
         $api_access->save();
-        return static::$api_access_model = $api_access;
+        return $this->api_access_model = $api_access;
     }
 }

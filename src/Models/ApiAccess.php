@@ -5,14 +5,18 @@ namespace Hanafalah\ApiHelper\Models;
 use Illuminate\Support\Facades\Hash;
 use Hanafalah\LaravelHasProps\Concerns\HasProps;
 use Hanafalah\LaravelSupport\Models\BaseModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ApiAccess extends BaseModel
 {
-  use SoftDeletes, HasProps;
+  use SoftDeletes, HasProps, HasUlids;
 
+  public $incrementing = false;
   protected $table = "api_accesses";
-
+  protected $keyType = 'string';
+  protected $primaryKey = 'id';
+  
   protected $fillable = [
     'id','app_code','reference_id','reference_type','token','props'
   ];
