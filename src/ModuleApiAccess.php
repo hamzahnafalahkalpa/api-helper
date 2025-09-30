@@ -138,6 +138,16 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
       'middleware' => $middlewares
     ], function () use ($callback) {
       $callback();
+      // $routes = Route::getRoutes();
+
+      // foreach ($routes as $route) {
+      //     // Misal filter route yang pakai middleware ini
+      //     if (in_array('api', $route->middleware())) {
+      //         echo $route->uri() . PHP_EOL;
+      //     }
+      // }
+      // dd();
     });
+
   }
 }
