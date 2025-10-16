@@ -4,7 +4,6 @@ namespace Hanafalah\ApiHelper\Middlewares;
 
 use Hanafalah\ApiHelper\Facades;
 use Closure;
-use Illuminate\Support\Facades\Auth;
 
 class ApiAccess
 {
