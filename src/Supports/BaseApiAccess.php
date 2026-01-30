@@ -34,13 +34,13 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
     const FOR_TOKEN        = 'FOR_TOKEN';
     const FOR_AUTHENTICATE = 'FOR_AUTHENTICATE';
 
-    protected static $__access_token;
+    protected $__access_token;
 
-    public static $__generated_token = [
+    public $__generated_token = [
         'token' => null,
         'expires_at' => null
     ];
-    protected static $__reason;
+    protected $__reason;
     protected $__threshold = 1800;
 
 
@@ -70,10 +70,14 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
             'props',
             'reference_type',
             'reference_id'
-        ])->findAppCode(static::$__app_code)->first();
+        ])->findAppCode($this->__app_code)->first();
         if (!isset($api_access)) throw new Exceptions\AppNotFoundException;
         $this->setApiAccess($api_access);
         return $this;
+    }
+
+    public function getAccessToken(){
+        return $this->__access_token;
     }
 
     /**
@@ -84,10 +88,16 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      */
     protected function setApiAccessByUsername(): self
     {
-        static::$__username = static::$__headers->get('Username');
-        $api_access = static::getApiAccess()->findUsername(static::$__headers->get('Username'))->first();
+        $this->__username = $this->__headers->get('Username');
+        $api_access = $this->getApiAccess()->select([
+            'id',
+            'app_code',
+            'props',
+            'reference_type',
+            'reference_id'
+        ])->findUsername($this->__headers->get('Username'))->first();
         if (!isset($api_access)) throw new Exceptions\AppNotFoundException;
-        static::setApiAccess($api_access);
+        $this->setApiAccess($api_access);
         return $this;
     }
 
@@ -99,7 +109,13 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      */
     protected function setApiAccessByToken(): self
     {
-        $api_access = $this->getApiAccess()->findToken($this->getToken())->first();
+        $api_access = $this->getApiAccess()->select([
+            'id',
+            'app_code',
+            'props',
+            'reference_type',
+            'reference_id'
+        ])->findToken($this->getToken())->first();
         if (!isset($api_access)) throw new Exceptions\TokenMistmatchException;
         $this->setApiAccess($api_access);
         return $this;
@@ -112,13 +128,13 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      */
     public function forToken(): self
     {
-        self::$__reason = self::FOR_TOKEN;
+        $this->__reason = self::FOR_TOKEN;
         return $this;
     }
 
     public function forAuthenticate(): self
     {
-        self::$__reason = self::FOR_AUTHENTICATE;
+        $this->__reason = self::FOR_AUTHENTICATE;
         return $this;
     }
 
@@ -129,12 +145,12 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      */
     public function isForToken(): bool
     {
-        return self::$__reason === self::FOR_TOKEN;
+        return $this->__reason === self::FOR_TOKEN;
     }
 
     public function isForAuthenticate(): bool
     {
-        return self::$__reason === self::FOR_AUTHENTICATE;
+        return $this->__reason === self::FOR_AUTHENTICATE;
     }
 
     /**
@@ -144,7 +160,15 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      */
     public function getReason(): string
     {
-        return self::$__reason;
+        return $this->__reason;
+    }
+
+    public function getGeneratedToken(): array{
+        return $this->__generated_token;
+    }
+
+    public function setGeneratedToken(array $generated_token): array{
+        return $this->__generated_token = $generated_token;
     }
 
     /**
@@ -154,7 +178,7 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      */
     public function getJti(): ?string
     {
-        return self::$__generated_token['jti'] ?? null;
+        return $this->__generated_token['jti'] ?? null;
     }
 
     /**
@@ -164,7 +188,7 @@ class BaseApiAccess extends PackageManagement implements DataManagement, Support
      */
     public function setExpirationToken(mixed $expiration = null): self
     {
-        self::$__generated_token['expires_at'] = $expiration;
+        $this->__generated_token['expires_at'] = $expiration;
         return $this;
     }
 }

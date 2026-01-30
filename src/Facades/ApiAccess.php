@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static self generateToken()
  * @method static string authorizing()
  * @method static ?string getToken()
- * @method static mixed getDecodedResult()
+ * @method static mixed getDecoded()
  * @method static self accessOnLogin(callable $callback)
  */
 class ApiAccess extends Facade

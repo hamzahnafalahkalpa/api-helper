@@ -7,40 +7,42 @@ use Hanafalah\ApiHelper\{
     Contracts\Schemas\Token as TokenInterface
 };
 use Hanafalah\ApiHelper\Exceptions\UnauthorizedAccess;
+use Hanafalah\ApiHelper\Facades\ApiAccess;
 
-class Token extends BaseApiAccess implements TokenInterface
+class Token implements TokenInterface
 {
     protected $data;
 
     public function __construct()
     {
-        parent::__construct();
-        $this->data = $this->authorizing()->handle();
+        $this->data = ApiAccess::authorizing()->handle();
     }
 
     public function handle()
     {
-        if ($this->isForToken()) {
-            $this->getUser()->token()->where([
-                'name'           => $this->__token_access_name,
-                'device_id'      => $_SERVER['HTTP_DEVICE_ID'] ?? null
-            ])->delete();
-            
-            return $this->encrypting(self::$__decode_result->data);
+        if (ApiAccess::isForToken()) {
+            if (config('api-helper.single-login',true)){
+                $user = auth()->user();
+                $user->token()->where([                    
+                    'name'           => ApiAccess::getTokenAccessName(),
+                    'device_id'      => $_SERVER['HTTP_DEVICE_ID'] ?? null
+                ])->delete();
+            }
+            return ApiAccess::encrypting(ApiAccess::getDecoded()->data);
         }
-        if ($this->isForAuthenticate()) {
+        if (ApiAccess::isForAuthenticate()) {
             if (request()->headers->has('Authorization')) {
-                $decoded    = $this->getDecoded();
-                $validation = isset(self::$__access_token);
+                // $decoded    = $this->getDecoded();
+                $decoded    = ApiAccess::getDecoded();
+                $access_token = ApiAccess::getAccessToken();
+                $validation = isset($access_token);
                 if ($validation) {
                     //IF JTI EXISTS
-                    if (isset($decoded->jti) || isset(self::$__access_token->jti)) {
-                        $validation = isset($decoded->jti) && $decoded->jti == self::$__access_token->jti;
+                    if (isset($decoded->jti) || isset($access_token->jti)) {
+                        $validation = isset($decoded->jti) && $decoded->jti == $access_token->jti;
                     }
-                    $user = self::$__access_token->tokenable;
-                    (isset($user))
-                        ? $this->setUser($user)
-                        : $validation = false;
+                    $user = $access_token->tokenable;
+                    $validation &= isset($user);
                     return $validation;
                 }
                 throw new UnauthorizedAccess;

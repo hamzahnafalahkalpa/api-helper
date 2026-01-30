@@ -11,7 +11,7 @@ trait HasEncryptor
     protected function decrypting(mixed $data): mixed
     {
         $this->setDecoded($this->chooseAlgorithm($data)->decrypt()->handle());
-        return self::$__decode_result;
+        return $this->__decode_result;
     }
 
     public function encrypting(mixed $data): bool|string

@@ -11,7 +11,7 @@ use Hanafalah\LaravelHasProps\Concerns\HasProps;
 trait HasSetup
 {
     protected static $__api_access;
-    protected static string
+    protected string
         $__username,
         $__timestamp,
         $__req_username,
@@ -19,7 +19,7 @@ trait HasSetup
         $__req_secret,
         $__app_code,
         $__app_key;
-    protected static array $__injectors = [];
+    protected array $__injectors = [];
 
     //GETTER SECTION
     /**
@@ -29,7 +29,7 @@ trait HasSetup
      */
     protected function getAppKey(): string
     {
-        return static::$__app_key;
+        return $this->__app_key;
     }
 
     /**
@@ -39,7 +39,7 @@ trait HasSetup
      */
     protected function getTimestamp(): int|string
     {
-        return static::$__timestamp;
+        return $this->__timestamp;
     }
 
     /**
@@ -49,7 +49,7 @@ trait HasSetup
      */
     protected function setTimestamp($timestamp): self
     {
-        static::$__timestamp = $timestamp;
+        $this->__timestamp = $timestamp;
         return $this;
     }
 
@@ -60,7 +60,7 @@ trait HasSetup
      */
     protected function getAppCode(): ?string
     {
-        return static::$__app_code;
+        return $this->__app_code;
     }
 
     /**
@@ -70,7 +70,7 @@ trait HasSetup
      */
     public function getApiAccess(): mixed
     {
-        return static::$__api_access ?? $this->ApiAccessModel();
+        return self::$__api_access ?? $this->ApiAccessModel();
     }
 
     /**
@@ -84,7 +84,7 @@ trait HasSetup
      */
     public function setAppCode(?string $app_code = null): self
     {
-        static::$__app_code = $app_code ?? request()->header('AppCode') ?? request()->AppCode ?? static::$__api_access->app_code;
+        $this->__app_code = $app_code ?? request()->header('AppCode') ?? request()->AppCode ?? self::$__api_access->app_code;
         return $this;
     }
 
@@ -103,8 +103,8 @@ trait HasSetup
     protected function setInjector(mixed $data): self
     {
         (is_array($data))
-            ? self::$__injectors = array_merge(self::$__injectors, $data)
-            : self::$__injectors[] = $data;
+            ? $this->__injectors = array_merge($this->__injectors, $data)
+            : $this->__injectors[] = $data;
 
         return $this;
     }
@@ -116,7 +116,7 @@ trait HasSetup
      */
     protected function getReqUsername(): string
     {
-        return static::$__req_username;
+        return $this->__req_username;
     }
 
     /**
@@ -126,11 +126,11 @@ trait HasSetup
      */
     protected function getReqSecret(): string
     {
-        return static::$__req_secret;
+        return $this->__req_secret;
     }
 
     protected function getReqPassword(): string
     {
-        return static::$__req_password;
+        return $this->__req_password;
     }
 }

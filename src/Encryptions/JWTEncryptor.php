@@ -40,7 +40,7 @@ class JWTEncryptor extends Environment implements EncryptorInterface
     public function __construct()
     {
         $this->__rsJwtHeaders = new stdClass();
-        self::$__payload ??= [];
+        $this->__payload ??= [];
     }
 
     /**
@@ -51,9 +51,9 @@ class JWTEncryptor extends Environment implements EncryptorInterface
      */
     public function handle(): mixed
     {
-        $this->setAlgorithm($this->getApiAccess()->algorithm);
+        $api_access = ApiAccess::getApiAccess();
         try {
-            switch (self::$__algorithm) {
+            switch ($api_access->algorithm) {
                 case 'RS256':
                 case 'RS384':
                 case 'RS512':
@@ -67,13 +67,13 @@ class JWTEncryptor extends Environment implements EncryptorInterface
                 case 'HS256':
                 case 'HS384':
                 case 'HS512':
-                    $result = $this->setSecretKey()->processHS();
+                    $result = $this->setSecretKey($api_access->secret)->processHS();
                 break;
             }
             return $result;
         } catch (\Throwable $th) {
+            \Log::error('JWT Encryption Error: ' . $th->getMessage() . ' | File: ' . $th->getFile() . ' | Line: ' . $th->getLine());
             abort(401);
-            //throw $th;
         }
     }
 
@@ -84,7 +84,7 @@ class JWTEncryptor extends Environment implements EncryptorInterface
      */
     public function setupJwtPayload(mixed $payload = null): self
     {
-        $payload ??= self::$__payload;
+        $payload ??= $this->__payload;
         $time = time();
         $api_access_expiration = ApiAccess::expiration();
         $exp  = isset($api_access_expiration) ? $time + $api_access_expiration : null;
@@ -99,7 +99,10 @@ class JWTEncryptor extends Environment implements EncryptorInterface
                 ? array_merge($this->__jwt_payload['data'], $payload)
                 : $payload
         ]);
-        $this->setExpirationToken($exp)->setJTI($jti);
+        $generated_token = ApiAccess::getGeneratedToken();
+        $generated_token['exp'] = $exp;
+        $generated_token['jti'] = $jti;
+        ApiAccess::setGeneratedToken($generated_token);
         return $this;
     }
 
@@ -130,25 +133,15 @@ class JWTEncryptor extends Environment implements EncryptorInterface
         $leeway = 60; // misalnya 60 detik toleransi
         JWT::$leeway = $leeway; // Set leeway sebelum decode
         try {
+            $algorithm = ApiAccess::getApiAccess()->algorithm;
             if ($this->__encrypt) {
                 $this->setupJwtPayload();
-                return JWT::encode($this->__jwt_payload, $key, static::$__algorithm);
+                return JWT::encode($this->__jwt_payload, $key, $algorithm);
             } else {
-                return JWT::decode(self::$__payload, new Key($key, static::$__algorithm), $this->__rsJwtHeaders);
+                return JWT::decode($this->__payload, new Key($key, $algorithm), $this->__rsJwtHeaders);
             }
         } catch (\Exception $e) {
             throw $e;
         }
-    }
-
-    /**
-     * Set the JTI of the token in the database.
-     *
-     * @return self
-     */
-    protected function setJTI(string $jti): self
-    {
-        self::$__generated_token['jti'] = $jti;
-        return $this;
     }
 }

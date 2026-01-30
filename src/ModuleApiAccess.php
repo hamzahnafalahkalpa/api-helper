@@ -5,6 +5,7 @@ namespace Hanafalah\ApiHelper;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Hanafalah\ApiHelper\Contracts\ModuleApiAccess as ContractsApiAccess;
+use Hanafalah\ApiHelper\Facades\ApiAccess;
 use Hanafalah\ApiHelper\Schemas\Token;
 use Hanafalah\ApiHelper\Supports\BaseApiAccess;
 
@@ -12,6 +13,7 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
 {
   public int $__expiration;
   public ?int $__expiration_config;
+  protected mixed $__decode_result;
 
   /**
    * Initialize the API access by given request headers.
@@ -27,28 +29,45 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
   public function init(? string $authorization = null): self
   {
     $this->setCollectHeader();
-    if (!request()->hasHeader('Authorization') && !isset($authorization)) throw new Exceptions\UnauthorizedAccess;
+
+    // Allow request to proceed if Authorization header, AppCode, or Username is present
+    if (!request()->hasHeader('Authorization') && !isset($authorization) && !$this->hasAppCode() && !$this->hasUsername()) {
+      throw new Exceptions\UnauthorizedAccess;
+    }
+
     $this->__expiration_config = config('api-helper.expiration');
     $this->expiration();
     if ($authorization == 'null') throw new Exceptions\UnauthorizedAccess;
 
-    $authorization    ??= Str::replace('Bearer ', '', self::$__headers->get('Authorization'));
+    $authorization    ??= Str::replace('Bearer ', '', $this->__headers->get('Authorization'));
     if (is_numeric(Str::position($authorization, '|'))){
-      self::$__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
+      $this->__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
       $this->__authorization = explode('|', $authorization)[1];
     }else{
       $this->__authorization = $authorization;
     }
     //IF REQUEST HAS TOKEN
+    // Priority: Username > Token > AppCode
+    // This ensures username/password login works even when AppCode is present
     switch (true) {
-      case $this->hasAppCode() : $this->initByAppCode();break;
-      case $this->hasToken()   : $this->initByToken();break;
       case $this->hasUsername(): $this->initByUsername();break;
+      case $this->hasToken()   : $this->initByToken();break;
+      case $this->hasAppCode() : $this->initByAppCode();break;
       default: throw new Exceptions\UnauthorizedAccess;
     }
     return $this;
   }
 
+  protected function setDecoded(mixed $result): self
+  {
+      $this->__decode_result = $result;
+      return $this;
+  }
+
+  protected function getDecoded(): mixed
+  {
+      return $this->__decode_result ?? null;
+  }
 
 
   /**
@@ -65,7 +84,7 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
    */
   public function accessOnLogin(?callable $callback = null): self
   {
-    if (isset(self::$__decode_result->aud)){
+    if (isset($this->__decode_result->aud)){
       $validation = $this->forAuthenticate()->schemaContract('Token')->handle();
       if ($validation && isset($callback)) $callback($this);
     }
@@ -117,14 +136,13 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
   {
     $token = $this->forToken()->useSchema(Token::class)->getClass()->handle();
     $this->setToken($token)->updateCounter();
-
     $props = ['app_code' => self::$__api_access->app_code];
-    if (isset(self::$__generated_token['jti'])) $props['jti'] = self::$__generated_token['jti'];
+    if (isset($this->__generated_token['jti'])) $props['jti'] = $this->__generated_token['jti'];
     $data = [
       'plainTextToken' => $token,
       'props'          => $props
     ];
-    $access_token = $this->getUser()->setToken($this->__token_access_name, $data, ['*'], self::$__generated_token['expires_at']);
+    $access_token = auth()->user()->setToken($this->__token_access_name, $data, ['*'], $this->__generated_token['expires_at']);
     if (isset($callback)) {
       $callback($this);
     }

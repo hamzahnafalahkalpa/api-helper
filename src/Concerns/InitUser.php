@@ -2,9 +2,10 @@
 
 namespace Hanafalah\ApiHelper\Concerns;
 
+use Illuminate\Support\Facades\Auth;
 trait InitUser
 {
-    public static $__api_user;
+    public $__api_user;
 
     /**
      * Get the authenticated user.
@@ -13,7 +14,7 @@ trait InitUser
      */
     public function getUser(): ?object
     {
-        return self::$__api_user;
+        return $this->__api_user;
     }
 
     /**
@@ -27,7 +28,7 @@ trait InitUser
     public function setUser(mixed $model = null): self
     {
         if (isset($model)) $model = \is_object($model) ? $model : app($model);
-        self::$__api_user = $model ?? app($this->authorizationConfig()['model']);
+        $this->__api_user = $model ?? app($this->authorizationConfig()['model']);
         return $this;
     }
 
@@ -38,6 +39,6 @@ trait InitUser
      */
     public function user(mixed $conditionals): ?object
     {
-        return $this->setUser($this->getUser()->conditionals($conditionals)->first() ?? null);
+        return $this->setUser(auth()->user()->conditionals($conditionals)->first() ?? null);
     }
 }

@@ -17,7 +17,7 @@ trait AlgorithmHS
      */
     protected function setSecretKey(?string $key = null): self
     {
-        $this->__secret_key = $key ?? $this->getApiAccess()->secret ?? '';
+        $this->__secret_key = $key ?? '';
         return $this;
     }
 

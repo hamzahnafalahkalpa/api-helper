@@ -18,7 +18,16 @@ trait HasInit
     protected function initByToken(): self
     {
         if (!$this->__authorization) throw new Exceptions\UnauthorizedAccess;
-        $this->setHeader('AppCode', self::$__access_token->app_code);
+
+        // If __access_token is null (JWT token without '|'), fallback to initByAppCode
+        if ($this->__access_token === null) {
+            if ($this->hasAppCode()) {
+                return $this->initByAppCode();
+            }
+            throw new Exceptions\UnauthorizedAccess;
+        }
+
+        $this->setHeader('AppCode', $this->__access_token->app_code);
         $this->initByAppCode();
         return $this;
     }

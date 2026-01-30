@@ -6,8 +6,12 @@ use Hanafalah\ApiHelper\Exceptions;
 
 trait HasToken
 {
-    protected static string $__token;
+    protected string $__token;
     protected string $__token_access_name = 'access-token';
+
+    public function getTokenAccessName(): string{
+        return $this->__token_access_name;
+    }
 
     /**
      * Gets the token of the current instance.
@@ -16,7 +20,7 @@ trait HasToken
      */
     public function getToken(): ?string
     {
-        return static::$__token ?? null;
+        return $this->__token ?? null;
     }
 
     /**
@@ -27,9 +31,9 @@ trait HasToken
      */
     protected function setToken(?string $token = null): self
     {
-        static::$__token = $token ?? $this->getApiAccess()->token;
-        self::$__generated_token['token'] = static::$__token;
-        self::$__generated_token['token'] = static::$__token;
+        $this->__token = $token ?? $this->getApiAccess()->token;
+        $this->__generated_token['token'] = $this->__token;
+        $this->__generated_token['token'] = $this->__token;
         return $this;
     }
 }

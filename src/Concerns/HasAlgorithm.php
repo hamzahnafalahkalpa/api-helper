@@ -4,9 +4,8 @@ namespace Hanafalah\ApiHelper\Concerns;
 
 trait HasAlgorithm
 {
-    protected static string $__algorithm = 'RS256';
-    protected static mixed $__payload;
-    protected static mixed $__decode_result;
+    protected string $__algorithm = 'RS256';
+    protected mixed $__payload;
     protected array $__algs = [
         'HS256',
         'HS384',
@@ -21,26 +20,20 @@ trait HasAlgorithm
 
     protected function chooseAlgorithm(mixed $payload, ?string $alg = null): mixed
     {
-        self::$__payload = $payload;
+        $this->__payload = $payload;
         if (isset($alg)) $this->setAlgorithm($alg);
-        if ($this->algorithmExists()) return app($this->encryption());
+        if ($this->algorithmExists()) {
+            $instance = app($this->encryption());
+            // Pass the payload to the new encryption instance
+            $instance->__payload = $payload;
+            return $instance;
+        }
         return false;
-    }
-
-    protected function setDecoded(mixed $result): self
-    {
-        static::$__decode_result = $result;
-        return $this;
-    }
-
-    protected function getDecoded(): mixed
-    {
-        return static::$__decode_result ?? null;
     }
 
     protected function setAlgorithm(string $algorithm): self
     {
-        static::$__algorithm = $algorithm;
+        $this->__algorithm = $algorithm;
         return $this;
     }
 
@@ -51,6 +44,6 @@ trait HasAlgorithm
      */
     protected function algorithmExists(): bool
     {
-        return \in_array(self::$__algorithm, $this->__algs);
+        return \in_array($this->__algorithm, $this->__algs);
     }
 }

@@ -8,12 +8,15 @@ use Hanafalah\ApiHelper\{
     Contracts\Encryptions\EncryptorInterface,
     Supports\BaseApiAccess
 };
+use Hanafalah\ApiHelper\Concerns\AlgorithmES;
 use Hanafalah\LaravelSupport\Concerns\Support\HasArray;
 
-abstract class Environment extends BaseApiAccess implements EncryptorInterface
+// abstract class Environment extends BaseApiAccess implements EncryptorInterface
+abstract class Environment implements EncryptorInterface
 {
     use AlgorithmRS;
     use AlgorithmHS;
+    use AlgorithmES;
     use HasArray;
 
     protected bool $__encrypt = true;
@@ -25,7 +28,7 @@ abstract class Environment extends BaseApiAccess implements EncryptorInterface
      *
      * @return self The current instance with the encrypted string.
      */
-    protected function encrypt(): self
+    public function encrypt(): self
     {
         $this->__encrypt = true;
         return $this;
@@ -36,7 +39,7 @@ abstract class Environment extends BaseApiAccess implements EncryptorInterface
      *
      * @return self The current instance with the decrypted string.
      */
-    protected function decrypt(): self
+    public function decrypt(): self
     {
         $this->__encrypt = false;
         return $this;

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Hanafalah\ApiHelper\{
     Exceptions
 };
+use Hanafalah\ApiHelper\Facades\ApiAccess;
 
 class JWTTokenValidator extends Environment
 {
@@ -15,7 +16,7 @@ class JWTTokenValidator extends Environment
 
     public function handle(): bool
     {
-        $this->auth = $this->getDecoded();
+        $this->auth = ApiAccess::getDecoded();
         if ($this->isForToken()) {
             $this->authenticate();
         } else {
@@ -66,7 +67,7 @@ class JWTTokenValidator extends Environment
                 $q->where($key, $this->auth->data->{$key});
             }
         });
-        $validation = isset(static::$__api_user) && $this->checkingPassword();
+        $validation = isset($this->__api_user) && $this->checkingPassword();
         $validation = $this->additionalChecking($validation);
         if (!$validation) throw new Exceptions\InvalidUsernameOrPassword();
         return $this;
@@ -84,7 +85,7 @@ class JWTTokenValidator extends Environment
     {
         $passName = $this->authorizationConfig()['password'];
         $password ??= $this->auth->data->{$passName};
-        $hash     ??= self::$__api_user->{$passName};
+        $hash     ??= $this->__api_user->{$passName};
         return Hash::check($password, $hash);
     }
 

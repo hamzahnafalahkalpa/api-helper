@@ -17,8 +17,8 @@ trait AlgorithmRS
      */
     protected function algorithmRS()
     {
-        return ($this->__encrypt) ? JWT::encode(self::$__payload, $this->__private_key, static::$__algorithm)
-            : JWT::decode(self::$__payload, new Key($this->__public_key, static::$__algorithm), $this->__rsJwtHeaders);
+        return ($this->__encrypt) ? JWT::encode($this->__payload, $this->__private_key, $this->__algorithm)
+            : JWT::decode($this->__payload, new Key($this->__public_key, $this->__algorithm), $this->__rsJwtHeaders);
     }
 
     /**

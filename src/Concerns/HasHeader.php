@@ -7,7 +7,7 @@ namespace Hanafalah\ApiHelper\Concerns;
  */
 trait HasHeader
 {
-    protected static $__headers;
+    protected $__headers;
 
     protected $__authorization;
 
@@ -18,7 +18,7 @@ trait HasHeader
      */
     protected function setCollectHeader(): self
     {
-        static::$__headers = request()->headers;
+        $this->__headers = request()->headers;
         return $this;
     }
 
@@ -31,7 +31,7 @@ trait HasHeader
      */
     protected function getHeader(string $key): string|null
     {
-        return static::$__headers->get($key);
+        return $this->__headers->get($key);
     }
 
     /**
@@ -44,7 +44,7 @@ trait HasHeader
      */
     protected function setHeader(string $key, string $value): self
     {
-        static::$__headers->set($key, $value);
+        $this->__headers->set($key, $value);
         return $this;
     }
 
@@ -57,7 +57,7 @@ trait HasHeader
      */
     protected function hasHeader(string $name): bool
     {
-        return static::$__headers->has($name);
+        return $this->__headers->has($name);
     }
 
     /**
