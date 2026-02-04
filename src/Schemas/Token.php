@@ -23,6 +23,7 @@ class Token implements TokenInterface
         if (ApiAccess::isForToken()) {
             if (config('api-helper.single-login',true)){
                 $user = auth()->user();
+                if (!isset($user)) throw new UnauthorizedAccess();
                 $user->token()->where([                    
                     'name'           => ApiAccess::getTokenAccessName(),
                     'device_id'      => $_SERVER['HTTP_DEVICE_ID'] ?? null
