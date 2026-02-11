@@ -72,21 +72,38 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
 
   /**
    * Access the API on login.
-   * 
+   *
    * This method is used to access the API after a user has successfully logged in.
    * It will check if the user has the correct role, and if the user has the correct
    * permission, it will call the given callback function.
-   * 
+   *
    * @param callable $callback The callback function to be called if the user has the
    * correct role and permission.
-   * 
+   *
    * @return self
    */
   public function accessOnLogin(?callable $callback = null): self
   {
+    $profiling = config('micro-tenant.profiling.enabled', false);
+    $timings = [];
+
     if (isset($this->__decode_result->aud)){
+      // Time token schema validation
+      $t = $profiling ? microtime(true) : 0;
       $validation = $this->forAuthenticate()->schemaContract('Token')->handle();
-      if ($validation && isset($callback)) $callback($this);
+      if ($profiling) $timings['token_schema_validation'] = round((microtime(true) - $t) * 1000, 2);
+
+      if ($validation && isset($callback)) {
+        // Time the callback
+        $t = $profiling ? microtime(true) : 0;
+        $callback($this);
+        if ($profiling) $timings['callback'] = round((microtime(true) - $t) * 1000, 2);
+      }
+
+      // Log profiling
+      if ($profiling && !empty($timings)) {
+        \Illuminate\Support\Facades\Log::info('[ApiAccess::accessOnLogin Breakdown]', $timings);
+      }
     }
     return $this;
   }

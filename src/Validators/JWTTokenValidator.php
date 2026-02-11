@@ -16,35 +16,75 @@ class JWTTokenValidator extends Environment
 
     public function handle(): bool
     {
+        $profiling = config('micro-tenant.profiling.enabled', false);
+        $timings = [];
+
         $this->auth = ApiAccess::getDecoded();
         if ($this->isForToken()) {
+            $t = $profiling ? microtime(true) : 0;
             $this->authenticate();
+            if ($profiling) $timings['authenticate'] = round((microtime(true) - $t) * 1000, 2);
         } else {
+            $t = $profiling ? microtime(true) : 0;
             $this->tokenValidator();
+            if ($profiling) $timings['tokenValidator'] = round((microtime(true) - $t) * 1000, 2);
         }
+
+        if ($profiling && !empty($timings)) {
+            \Illuminate\Support\Facades\Log::info('[JWTTokenValidator::handle Breakdown]', $timings);
+        }
+
         return true;
     }
 
     public function tokenValidator(): self
     {
-        if (!Auth::check()) {
-            $data = $this->auth->data ?? null;
+        $profiling = config('micro-tenant.profiling.enabled', false);
+        $timings = [];
 
-            if (!$data) {
-                throw new \Exception('Auth data is missing');
+        if (!Auth::check()) {
+            // OPTIMIZATION: First try to use the already-validated access token
+            // This avoids expensive bcrypt password verification on every request
+            $t = $profiling ? microtime(true) : 0;
+            $accessToken = ApiAccess::getAccessToken();
+            if ($profiling) $timings['get_access_token'] = round((microtime(true) - $t) * 1000, 2);
+
+            if ($accessToken && $accessToken->tokenable) {
+                // Access token exists and has a user - use it directly (fast path)
+                $t = $profiling ? microtime(true) : 0;
+                Auth::login($accessToken->tokenable);
+                if ($profiling) $timings['auth_login_from_token'] = round((microtime(true) - $t) * 1000, 2);
+            } else {
+                // Fallback to JWT data authentication (slow path - only for initial login)
+                $data = $this->auth->data ?? null;
+
+                if (!$data) {
+                    throw new \Exception('Auth data is missing');
+                }
+
+                if (isset($data->id)) {
+                    $t = $profiling ? microtime(true) : 0;
+                    $user = $this->UserModel()->findOrFail($data->id);
+                    if ($profiling) $timings['user_find'] = round((microtime(true) - $t) * 1000, 2);
+
+                    $t = $profiling ? microtime(true) : 0;
+                    Auth::login($user);
+                    if ($profiling) $timings['auth_login'] = round((microtime(true) - $t) * 1000, 2);
+                } else {
+                    if (!is_string($data->username ?? null) || !is_string($data->password ?? null)) {
+                        throw new \Exception('Invalid username or password format');
+                    }
+                    $t = $profiling ? microtime(true) : 0;
+                    Auth::attempt([
+                        "username" => $data->username,
+                        "password" => $data->password
+                    ]);
+                    if ($profiling) $timings['auth_attempt'] = round((microtime(true) - $t) * 1000, 2);
+                }
             }
 
-            if (isset($data->id)) {
-                $user = $this->UserModel()->findOrFail($data->id);
-                Auth::login($user);
-            } else {
-                if (!is_string($data->username ?? null) || !is_string($data->password ?? null)) {
-                    throw new \Exception('Invalid username or password format');
-                }
-                Auth::attempt([
-                    "username" => $data->username,
-                    "password" => $data->password
-                ]);
+            if ($profiling && !empty($timings)) {
+                \Illuminate\Support\Facades\Log::info('[JWTTokenValidator::tokenValidator Breakdown]', $timings);
             }
         }
 
