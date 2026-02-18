@@ -138,7 +138,7 @@ class JWTEncryptor extends Environment implements EncryptorInterface
                 $this->setupJwtPayload();
                 return JWT::encode($this->__jwt_payload, $key, $algorithm);
             } else {
-                return JWT::decode($this->__payload, new Key($key, $algorithm), $this->__rsJwtHeaders);
+                return JWT::decode($this->__payload, new Key($key, $algorithm));
             }
         } catch (\Exception $e) {
             throw $e;
