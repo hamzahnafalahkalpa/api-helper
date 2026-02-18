@@ -20,7 +20,7 @@
     },
     "require": {
         "laravel/sanctum": "^4.0",
-        "firebase/php-jwt": "^6.10",
+        "firebase/php-jwt": "^6.12",
         "paragonie/sodium_compat": "^2.1",
         "phpseclib/phpseclib": "^3.0",
         "hanafalah/laravel-support": "dev-main"
