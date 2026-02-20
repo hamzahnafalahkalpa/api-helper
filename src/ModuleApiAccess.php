@@ -36,8 +36,7 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
 
     $this->__expiration_config = config('api-helper.expiration');
     $this->expiration();
-    if ($authorization == 'null') throw new Exceptions\UnauthorizedAccess;
-
+    if ($authorization == 'null') throw new Exceptions\InvalidUsernameOrPassword;
     $authorization    ??= Str::replace('Bearer ', '', $this->__headers->get('Authorization'));
     if (is_numeric(Str::position($authorization, '|'))){
       $this->__access_token  = $this->PersonalAccessTokenModel()->findToken($authorization);
@@ -52,7 +51,7 @@ class ModuleApiAccess extends BaseApiAccess implements ContractsApiAccess
       case $this->hasUsername(): $this->initByUsername();break;
       case $this->hasToken()   : $this->initByToken();break;
       case $this->hasAppCode() : $this->initByAppCode();break;
-      default: throw new Exceptions\UnauthorizedAccess;
+      default: throw new Exceptions\InvalidUsernameOrPassword;
     }
     return $this;
   }

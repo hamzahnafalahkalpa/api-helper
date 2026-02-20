@@ -6,6 +6,7 @@ use Hanafalah\ApiHelper\{
     Supports\BaseApiAccess,
     Contracts\Schemas\Token as TokenInterface
 };
+use Hanafalah\ApiHelper\Exceptions\InvalidUsernameOrPassword;
 use Hanafalah\ApiHelper\Exceptions\UnauthorizedAccess;
 use Hanafalah\ApiHelper\Facades\ApiAccess;
 
@@ -32,7 +33,7 @@ class Token implements TokenInterface
         if (ApiAccess::isForToken()) {
             if (config('api-helper.single-login',true)){
                 $user = auth()->user();
-                if (!isset($user)) throw new UnauthorizedAccess();
+                if (!isset($user)) throw new InvalidUsernameOrPassword();
                 $user->token()->where([
                     'name'           => ApiAccess::getTokenAccessName(),
                     'device_id'      => $_SERVER['HTTP_DEVICE_ID'] ?? null
@@ -67,7 +68,7 @@ class Token implements TokenInterface
                     }
                     return $validation;
                 }
-                throw new UnauthorizedAccess;
+                throw new UnauthorizedAccess();
             }
             return false;
         }
